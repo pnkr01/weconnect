@@ -14,7 +14,7 @@ class OnBoardingController extends GetxController {
   }
 
   void startTimer() {
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 3), () {
       checkLocalPrefs();
     });
   }
@@ -40,7 +40,9 @@ class OnBoardingController extends GetxController {
   UserRole getRole() {
     final storedRole = sharedPreferences.getString('role');
     return storedRole != null
-        ? UserRole.values.firstWhere((e) => e.toString() == storedRole)
+        ? storedRole == "admin"
+            ? UserRole.admin
+            : UserRole.coordinator
         : UserRole.none;
   }
 

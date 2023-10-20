@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/db/local_db.dart';
 import 'package:weconnect/src/global/global.dart';
 
@@ -15,6 +16,7 @@ class MyFirebase {
       "creationTime": userAccountModel.metadata.creationTime,
       "role": sharedPreferences.getString("role"),
     });
+    connectdebugPrint(userAccountModel);
     await LocalDB.saveUserEmail(userAccountModel.email ?? "null");
   }
 }

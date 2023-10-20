@@ -37,7 +37,7 @@ class LoginController extends GetxController {
           idToken: googleSignInAuthentication.idToken);
       final UserCredential credential = await authController.firebaseAuth
           .signInWithCredential(oAuthCredential);
-      storeDataToDB(credential);
+      await storeDataToDB(credential);
       connectdebugPrint(
           "$oAuthCredential\n\n\n\n$credential\n\n\n\n\n$googleSignInAuthentication");
 
