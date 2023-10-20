@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/screens/auth/auth_screen.dart';
-import 'package:weconnect/src/screens/home/admin/admin_home.dart';
+import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
 import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
 import 'package:weconnect/src/utils/global.dart';
 
@@ -36,13 +36,21 @@ class OnBoardingController extends GetxController {
       // handle other roles or "none"
     }
   }
-
-  UserRole getRole() {
+ UserRole getRole() {
     final storedRole = sharedPreferences.getString('role');
     return storedRole != null
-        ? UserRole.values.firstWhere((e) => e.toString() == storedRole)
+        ? storedRole == "admin"
+            ? UserRole.admin
+            : UserRole.coordinator
         : UserRole.none;
   }
+
+  // UserRole getRole() {
+  //   final storedRole = sharedPreferences.getString('role');
+  //   return storedRole != null
+  //       ? UserRole.values.firstWhere((e) => e.toString() == storedRole)
+  //       : UserRole.none;
+  // }
 
   //write switch case to check if user is admin or coordinator
   //if admin send to admin screen

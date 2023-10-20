@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "4907483683-s0s467rn42es4ei7h05eio7310iurl8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.weconnect",
+            "certificate_hash": "f640ec8446ea1c37586514c7bcb178c0d558913c"
+          }
+        },
+        {
           "client_id": "4907483683-ev8f81cll9nfidgjt3p8mh9uj6fer89q.apps.googleusercontent.com",
           "client_type": 3
         }

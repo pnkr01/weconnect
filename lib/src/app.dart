@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:weconnect/src/routes/routes.dart';
+import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
+import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
 import 'controllers/all_controller.dart';
 
 class MyApp extends StatelessWidget {
@@ -11,6 +13,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) => GetMaterialApp(
+        
         initialBinding: AllBindings(),
         debugShowCheckedModeBanner: false,
         title: 'Connect US',
@@ -18,7 +21,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        getPages: AppRoute.pages(),
+        home:AdminHomePage(),
+       //getPages: AppRoute.pages(),
       ),
     );
   }
