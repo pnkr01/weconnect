@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:weconnect/src/model/company_model.dart';
 import 'package:weconnect/src/routes/routes.dart';
 import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
 import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
 import 'controllers/all_controller.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final List<Company> companies=[];
+ MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -16,13 +19,14 @@ class MyApp extends StatelessWidget {
         
         initialBinding: AllBindings(),
         debugShowCheckedModeBanner: false,
-        title: 'Connect US',
+        title: 'We Connect',
         theme: ThemeData(
+          textTheme: GoogleFonts.robotoTextTheme(),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home:AdminHomePage(),
-       //getPages: AppRoute.pages(),
+       // home:AdminHomePage(),
+       getPages: AppRoute.pages(),
       ),
     );
   }

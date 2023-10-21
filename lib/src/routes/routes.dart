@@ -15,7 +15,7 @@ class AppRoute {
             name: AuthScreenPage.routeName, page: () => const AuthScreenPage()),
         GetPage(name: HomePage.routeName, page: () => const HomePage()),
         GetPage(
-            name: AdminHomePage.routeName, page: () => const AdminHomePage()),
+            name: AdminHomePage.routeName, page: () =>  AdminHomePage()),
         GetPage(
             name: CoordinatorHomePage.routeName,
             page: () => const CoordinatorHomePage()),

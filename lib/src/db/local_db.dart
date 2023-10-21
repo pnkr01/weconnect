@@ -7,12 +7,20 @@ class LocalDB {
     if (sharedPreferences == null) {
       sharedPreferences = await SharedPreferences.getInstance();
     }
-  }
 
-  static saveUserEmail(String email) {
-    initializeLocalDB()
-        .then((value) => sharedPreferences.setString("email", email));
   }
+  
+  static saveUserProfile(String name,String email){
+    initializeLocalDB()
+        .then((value){
+           sharedPreferences.setString("email", email);
+           sharedPreferences.setString("name", name);
+        });
+  }
+  // static saveUserEmail(String email) {
+  //   initializeLocalDB()
+  //       .then((value) => sharedPreferences.setString("email", email));
+  // }
 
   static clearLocalDB() {
     initializeLocalDB().then((value) => sharedPreferences.clear());
