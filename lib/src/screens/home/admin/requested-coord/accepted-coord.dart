@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weconnect/src/screens/home/admin/requested-coord/pending-coord.dart';
 
 class AcceptedCoordinators extends StatefulWidget {
   const AcceptedCoordinators({super.key});

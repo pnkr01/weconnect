@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weconnect/src/model/company_model.dart';
 import 'package:weconnect/src/routes/routes.dart';
-import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
-import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
 import 'controllers/all_controller.dart';
 
 class MyApp extends StatelessWidget {

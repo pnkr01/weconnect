@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/strings.dart';
+import 'package:weconnect/src/db/local_db.dart';
 import 'package:weconnect/src/model/company_model.dart';
 import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
 
 import 'package:weconnect/src/screens/home/admin/requested-coord/request_page.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
-import 'package:weconnect/src/utils/global.dart';
 
 class MainDrawer extends StatelessWidget {
-   MainDrawer({super.key});
-final List<Company> companies = [];
+  MainDrawer({super.key});
+  final List<Company> companies = [];
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(40), bottomRight: Radius.circular(40))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only()),
       // backgroundColor: color4,
       child: SingleChildScrollView(
         child: Column(
@@ -42,13 +40,14 @@ Widget buildHeader(BuildContext context) {
       child: Column(
         children: [
           CircleAvatar(
-            backgroundColor: Colors.black,
+            backgroundColor: whiteColor,
             radius: 40,
+            backgroundImage: NetworkImage(photoAvatorUrl),
           ),
           SizedBox(
             height: 8,
           ),
-          Text("${sharedPreferences.getString("name")}",
+          Text("${LocalDB().getName()}",
               style: GoogleFonts.montserrat(
                   color: Colors.white,
                   fontSize: 20.0,
@@ -56,7 +55,7 @@ Widget buildHeader(BuildContext context) {
           SizedBox(
             height: 8,
           ),
-          Text("${sharedPreferences.getString("email")}",
+          Text("${LocalDB().getEmail()}",
               style: GoogleFonts.montserrat(
                   color: Colors.white,
                   fontSize: 15.0,
@@ -71,9 +70,6 @@ Widget buildHeader(BuildContext context) {
 
 Widget buildMenuItems(BuildContext context) {
   return Container(
-    //  decoration: BoxDecoration(
-    //   color: color2
-    // ),
     padding: EdgeInsets.all(8),
     child: Wrap(
       runSpacing: 16,

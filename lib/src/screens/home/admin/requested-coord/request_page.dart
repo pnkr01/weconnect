@@ -10,42 +10,42 @@ class RequestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AcceptedCoordinators x=AcceptedCoordinators();
-    return
-     DefaultTabController(
-      
-      length: 2,
-      child:
-       Scaffold(
-
-        drawer: MainDrawer(),
-        appBar: AppBar(title: Text("REQUESTS", style: TextStyle(
-              color: whiteColor,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.5),),centerTitle: true,
-           iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: color1,
-        ),
-        body: Column(
-          children: [
-
-          TabBar(
-            indicatorColor: color1,
-            labelColor: color1,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1.5),
-            tabs:
-          [
-            Tab(text: 'ACCEPTED',),
-            Tab(text: 'PENDING',),
-          ],
-          
-           ),
-           Expanded(child: TabBarView(children: [
-            AcceptedCoordinators(),
-            PendingCoordinators()
-           ])
-           )
-          ]
-      )));
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            drawer: MainDrawer(),
+            appBar: AppBar(
+              title: Text(
+                "REQUESTS",
+                style: TextStyle(
+                    color: whiteColor,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5),
+              ),
+              centerTitle: true,
+              iconTheme: IconThemeData(color: Colors.white),
+              backgroundColor: color1,
+            ),
+            body: Column(children: [
+              TabBar(
+                indicatorColor: color1,
+                labelColor: color1,
+                labelStyle:
+                    TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                tabs: [
+                  Tab(
+                    text: 'ACCEPTED',
+                  ),
+                  Tab(
+                    text: 'PENDING',
+                  ),
+                ],
+              ),
+              Expanded(
+                  child: TabBarView(children: [
+                AcceptedCoordinators(),
+                PendingCoordinators()
+              ]))
+            ])));
   }
 }
