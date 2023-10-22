@@ -25,7 +25,7 @@ class AuthScreenPage extends StatelessWidget {
               ResponsiveCircleContainer(
                 child: IconButton(
                   onPressed: () {
-                    Get.find<LoginController>().login();
+                  Get.find<LoginController>().login();
                   },
                   icon: FaIcon(
                     FontAwesomeIcons.google,

@@ -1,11 +1,13 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/constant/print.dart';
+import 'package:weconnect/src/global/global.dart';
 import 'package:weconnect/src/screens/auth/auth_screen.dart';
-import 'package:weconnect/src/screens/home/admin/admin_home.dart';
+import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
 import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
-import 'package:weconnect/src/utils/global.dart';
 
 class OnBoardingController extends GetxController {
   void startCaller() {
@@ -19,8 +21,8 @@ class OnBoardingController extends GetxController {
     });
   }
 
-  checkLocalPrefs() {
-    switch (getRole()) {
+  checkLocalPrefs() async {
+    switch (await getRole()) {
       case UserRole.coordinator:
         // send to coordinator screen
         Get.offAllNamed(CoordinatorHomePage.routeName);
@@ -30,24 +32,20 @@ class OnBoardingController extends GetxController {
         Get.offAllNamed(AdminHomePage.routeName);
         break;
       default:
-        // send to onboarding screen
+        // send to auth screen
         Get.offAllNamed(AuthScreenPage.routeName);
         break;
       // handle other roles or "none"
     }
   }
 
-  UserRole getRole() {
-    final storedRole = sharedPreferences.getString('role');
+  Future<UserRole> getRole() async {
+    final storedRole = await sharedPreferences.getString('role');
+    connectdebugPrint("role is $storedRole");
     return storedRole != null
         ? storedRole == "admin"
             ? UserRole.admin
             : UserRole.coordinator
         : UserRole.none;
   }
-
-  //write switch case to check if user is admin or coordinator
-  //if admin send to admin screen
-  //if coordinator send to coordinator screen
-  //else send to onboarding screen
 }

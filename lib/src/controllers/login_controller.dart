@@ -4,10 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/controllers/auth_controller.dart';
 import 'package:weconnect/src/db/firebase.dart';
-import 'package:weconnect/src/screens/home/admin/admin_home.dart';
-import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
 import 'package:weconnect/src/utils/circle_progress.dart';
-import 'package:weconnect/src/utils/global.dart';
 
 class LoginController extends GetxController {
   AuthController authController = Get.find<AuthController>();
@@ -37,21 +34,10 @@ class LoginController extends GetxController {
           idToken: googleSignInAuthentication.idToken);
       final UserCredential credential = await authController.firebaseAuth
           .signInWithCredential(oAuthCredential);
-      await storeDataToDB(credential);
-      connectdebugPrint(
-          "$oAuthCredential\n\n\n\n$credential\n\n\n\n\n$googleSignInAuthentication");
-
-      //save the information to firestore
-      //check is it admin or not if admin then send to admin screen or send to new
-      //screen to ask for registartion and
-      //send to homePage
-      if (googleSignInAccount.email == "infokumar66@gmail.com") {
-        sharedPreferences.setString('role', "admin");
-        Get.offAllNamed(AdminHomePage.routeName);
-      } else {
-        sharedPreferences.setString('role', "coordinator");
-        Get.offAllNamed(CoordinatorHomePage.routeName);
-      }
+      storeDataToDB(credential);
+      //print(credential.user!.email);
+      // connectdebugPrint(
+      //     "$oAuthCredential\n\n\n\n$credential\n\n\n\n\n$googleSignInAuthentication");
       CustomCircleLoading.cancelDialog();
     }
   }

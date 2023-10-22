@@ -16,7 +16,6 @@ class MyFirebase {
       "creationTime": userAccountModel.metadata.creationTime,
       "role": sharedPreferences.getString("role"),
     });
-    connectdebugPrint(userAccountModel);
-    await LocalDB.saveUserEmail(userAccountModel.email ?? "null");
+    await LocalDB.saveUserProfile(userAccountModel.email ?? "null",userAccountModel.displayName??"null");
   }
 }
