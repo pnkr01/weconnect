@@ -2,17 +2,20 @@ import 'dart:io';
 
 
 class Company {
-  File? logoImage;
+File? logoImage;
   String? name;
-  String? compensation;
+String? compensation;
   String? batch;
   String? role;
 
   Company(
       {
-      required this.logoImage,
+   required this.logoImage,
       required this.name,
-      required this.compensation,
-      required this.batch,
-      required this.role});
+   required this.compensation,
+    required this.batch,
+     required this.role
+     }
+     );
 }
+
