@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/print.dart';
-import 'package:weconnect/src/model/company_model.dart';
-import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
+import 'package:weconnect/src/controllers/admin_home_controller.dart';
+import 'package:weconnect/src/db/firebase.dart';
+import 'package:weconnect/src/utils/circle_progress.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
+import 'package:weconnect/src/utils/global.dart';
 
 class CompanyCreation extends StatefulWidget {
   const CompanyCreation({super.key});
@@ -16,25 +18,11 @@ class CompanyCreation extends StatefulWidget {
 }
 
 class _CompanyCreationState extends State<CompanyCreation> {
+  final MyFirebase _firebase = MyFirebase();
+  final HomeController controller = Get.put(HomeController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//final CreateCompanyController createCompanyController = Get.put(CreateCompanyController());
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController batchController = TextEditingController();
-  final TextEditingController roleController = TextEditingController();
-  final TextEditingController compensationController = TextEditingController();
   File? logoImage;
-
-  void saveCompany() {
-    final newCompany = Company(
-        name: nameController.text,
-        batch: batchController.text,
-        role: roleController.text,
-        compensation: compensationController.text,
-        logoImage: logoImage // Provide a default value if no image selected
-        );
-        connectdebugPrint(newCompany);
-  }
 
   // Function to pick an image from the gallery or camera
   Future<void> _pickImage() async {
@@ -43,18 +31,11 @@ class _CompanyCreationState extends State<CompanyCreation> {
 
     setState(() {
       if (pickedFile != null) {
+        File pickedImage = File(pickedFile.path);
+        controller.addImage(pickedImage);
         logoImage = File(pickedFile.path);
       }
     });
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    batchController.dispose();
-    roleController.dispose();
-    compensationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -78,8 +59,6 @@ class _CompanyCreationState extends State<CompanyCreation> {
           child: Form(
             key: _formKey,
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.s,
-
               children: [
                 InkWell(
                     onTap: () {
@@ -102,18 +81,13 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                  // ignore: body_might_complete_normally_nullable
-                  validator: (value) =>
-                      value!.isEmpty ? "This Field is Mandatory." : value,
-                  //  validator: (value)
-
-                  //  {
-                  //   if(value!.isEmpty)
-                  //   {
-                  //     return "This Field is Mandatory.";
-                  //   }
-                  // },
-                  controller: nameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "This Field is Mandatory.";
+                    }
+                    return null;
+                  },
+                  controller: controller.nameController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -130,7 +104,7 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     }
                     return null;
                   },
-                  controller: compensationController,
+                  controller: controller.compensationController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -147,7 +121,7 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     }
                     return null;
                   },
-                  controller: batchController,
+                  controller: controller.batchController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -164,7 +138,7 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     }
                     return null;
                   },
-                  controller: roleController,
+                  controller: controller.roleController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -174,28 +148,31 @@ class _CompanyCreationState extends State<CompanyCreation> {
                 SizedBox(
                   height: 16,
                 ),
-
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    CustomCircleLoading.showDialog();
                     if (_formKey.currentState!.validate()) {
-                      saveCompany();
+                      await _firebase.saveCompanyInfoToFirestore(
+                          controller.getName,
+                          controller.getBatch,
+                          controller.getRole,
+                          controller.getCompensation,
+                          logoImage!);
+
+                      connectdebugPrint(
+                          "name is ${controller.getName} and batch is ${controller.getBatch} and role is ${controller.getRole} and compensation is ${controller.getCompensation} and logo is $logoImage");
+
+                      if (logoImage != null) {
+                        await _firebase
+                            .uploadImageToFirebaseStorage(logoImage!);
+                      }
+                      controller.clearController();
+                      CustomCircleLoading.cancelDialog();
                       Get.back();
-                      //    final newCompany = Company(
-                      //   logoImage: logoImage,
-                      //   name: nameController.text,
-                      //   compensation: compensationController.text,
-                      //   batch: batchController.text,
-                      //   role: roleController.text,
-                      // );
-                      Get.to(() => AdminHomePage());
-
-                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                      //   return AdminHomePage(companies: [  ]);
-                      // }));
-                      //  Navigator.pop(context, newCompany);
+                    } else {
+                      CustomCircleLoading.cancelDialog();
+                      showSnackBar("fill all blanks", redColor, whiteColor);
                     }
-
-                    //
                   },
                   child: Container(
                     height: 40,
@@ -218,19 +195,6 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     ),
                   ),
                 ),
-
-                // ElevatedButton(
-                //   onPressed: () {
-                //     final newShop = Company(
-                //       name: nameController.text,
-                //       logo: logoController.text,
-                //       place: placeController.text,
-                //       role: roleController.text,
-                //     );
-                //     Navigator.pop(context, newShop);
-                //   },
-                //   child: Text('ADD COMPANY'),
-                // ),
               ],
             ),
           ),
@@ -239,28 +203,3 @@ class _CompanyCreationState extends State<CompanyCreation> {
     );
   }
 }
-
-// class CreateCompanyController extends GetxController {
-//   final TextEditingController nameController = TextEditingController();
-//   final TextEditingController batchController = TextEditingController();
-//   final TextEditingController roleController = TextEditingController();
-//   final TextEditingController placeController = TextEditingController();
-//   String? logoPath;
-
-//   void saveCompany() {
-//     final newCompany = Company(
-//       name: nameController.text,
-//       batch: batchController.text,
-//       role: roleController.text,
-//       place: placeController.text,
-//       logo: logoPath ?? '', // Provide a default value if no image selected
-//     );
-
-//     // Save the company data to a list or database
-//     // You can also use another GetxController to manage a list of companies
-//     // For now, just print the new company data
-//     print(newCompany);
-//   }
-
-//   // You can add methods for handling the image selection here
-// }

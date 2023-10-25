@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 class Company {
   File? logoImage;
   String? name;
@@ -9,8 +8,7 @@ class Company {
   String? role;
 
   Company(
-      {
-      required this.logoImage,
+      {required this.logoImage,
       required this.name,
       required this.compensation,
       required this.batch,

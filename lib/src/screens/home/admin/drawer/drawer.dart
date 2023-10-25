@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/strings.dart';
 import 'package:weconnect/src/db/local_db.dart';
 import 'package:weconnect/src/model/company_model.dart';
+import 'package:weconnect/src/screens/auth/auth_screen.dart';
 import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
 
 import 'package:weconnect/src/screens/home/admin/requested-coord/request_page.dart';
@@ -58,7 +60,7 @@ Widget buildHeader(BuildContext context) {
           Text("${LocalDB().getEmail()}",
               style: GoogleFonts.montserrat(
                   color: Colors.white,
-                  fontSize: 15.0,
+                  fontSize: 13.0,
                   fontWeight: FontWeight.w500)
               // letterSpacing: 1.5
               ),
@@ -128,7 +130,10 @@ Widget buildMenuItems(BuildContext context) {
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.0),
           ),
-          onTap: () {},
+          onTap: () {
+            LocalDB.clearLocalDB();
+            Get.offAllNamed(AuthScreenPage.routeName);
+          },
         ),
       ],
     ),
