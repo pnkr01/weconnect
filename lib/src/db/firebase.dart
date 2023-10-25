@@ -50,7 +50,8 @@ class MyFirebase {
         'batch': batch,
         'role': role,
         'compensation': compensation,
-        'logoImageUrl': imageUrl
+        'logoImageUrl': imageUrl,
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
       };
       final companyRef =
           FirebaseFirestore.instance.collection('companies').doc(name);
