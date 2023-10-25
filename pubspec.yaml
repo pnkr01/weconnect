@@ -48,6 +48,9 @@ dependencies:
   flutter_screenutil: ^5.9.0
   hidden_drawer_menu: ^3.0.1
   image_picker: ^1.0.4
+  audioplayers: ^5.2.0
+  record: ^5.0.1
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:

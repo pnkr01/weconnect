@@ -93,4 +93,76 @@ class MyFirebase {
       print('Error saving company information: $e');
     }
   }
+
+
+   Future<List<String>> uploadTestimonialImageToFirebaseStorage(List<File> selectedImages) async {
+   
+  // Initialize Firebase Storage
+  final FirebaseStorage storage = FirebaseStorage.instance;
+
+  // Create a reference to the Firebase Storage bucket and folder where you want to store the images
+  final Reference storageRef = storage.ref().child('testimonial-images');
+
+  // List to store URLs of uploaded images
+  List<String> uploadedImageUrls = [];
+
+  for (File image in selectedImages) {
+    try {
+      // Generate a unique filename for each image
+      final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Create a reference to the image file in Firebase Storage
+      final Reference imageRef = storageRef.child(fileName);
+
+      // Upload the image to Firebase Storage
+      final UploadTask uploadTask = imageRef.putFile(File(image.path));
+
+      // Get the upload task's snapshot to track the progress
+      final TaskSnapshot snapshot = await uploadTask;
+
+      // Check if the upload was successful
+      if (snapshot.state == TaskState.success) {
+        // Get the download URL for the uploaded image
+        final String downloadUrl = await imageRef.getDownloadURL();
+
+        // Add the download URL to the list of uploaded image URLs
+        uploadedImageUrls.add(downloadUrl);
+      } else {
+        // Handle upload failure
+        print('Image upload failed');
+      }
+    } catch (e) {
+      // Handle any errors that occur during the upload process
+      print('Error uploading image: $e');
+    }
+    
+    
+  }
+    return uploadedImageUrls;
+}
+
+   
+
+   Future<void> saveCompanyTestimonialsInfoToFirestore(String studentName, String role,
+      String topic, String questions, List<File> selectedImages) async {
+    try {
+      //final user = FirebaseAuth.instance.currentUser;
+      List<String> imageUrls = await uploadTestimonialImageToFirebaseStorage(selectedImages);
+      final companyTestimonialData = {
+        'studentName': studentName.toLowerCase(),
+        'role': role,
+        'topic': topic,
+        'questions': questions,
+        'selectedImages': imageUrls,
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+      };
+      final companyRef =
+          FirebaseFirestore.instance.collection('company-testimonials').doc(studentName);
+      await companyRef.set(companyTestimonialData);
+
+      await companyRef.set(companyTestimonialData, SetOptions(merge: true));
+    } catch (e) {
+      print('Error saving company information: $e');
+    }
+  }
 }

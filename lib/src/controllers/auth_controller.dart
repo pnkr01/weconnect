@@ -30,7 +30,7 @@ class AuthController extends GetxController {
   }
 
   Future runthisAfterSignIn(GoogleSignIn googleSignInAccount) async {
-    if (googleSignInAccount.currentUser!.email == adminEmail1) {
+    if (googleSignInAccount.currentUser!.email == adminEmail1 || googleSignInAccount.currentUser!.email == adminEmail2) {
       await SharedPreferences.getInstance()
           .then((value) => value.setString('role', "admin"));
       Get.offAllNamed(AdminHomePage.routeName);

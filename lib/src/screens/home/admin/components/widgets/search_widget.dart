@@ -1,5 +1,10 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:weconnect/src/constant/enums.dart';
+import 'package:weconnect/src/screens/home/coordinators/company_testimonials.dart';
 import 'package:weconnect/src/utils/global.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
@@ -81,17 +86,35 @@ class _CompanySearchScreenState extends State<CompanySearchScreen> {
 
   Widget _buildSearchResults() {
     return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _searchResults.length,
-      itemBuilder: (context, index) {
-        final companyData =
-            _searchResults[index].data() as Map<String, dynamic>;
-        return ListTile(
-          title: Text(capitalizeFirstLetter(companyData['name'])),
-          subtitle: Text(companyData['role']),
-          // Add other fields you want to display
+        shrinkWrap: true,
+        itemCount: _searchResults.length,
+        itemBuilder: (context, index) {
+          final companyData =
+              _searchResults[index].data() as Map<String, dynamic>;
+          if (UserRole.admin == true) {
+            return ListTile(
+              onTap: () {
+                
+              },
+              title: Text(capitalizeFirstLetter(companyData['name'])),
+              subtitle: Text(companyData['role']),
+              // Add other fields you want to display
+            );
+          } else {
+
+            return ListTile(
+              onTap: () {
+               Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return CompanyTestimonials();
+                }));
+              },
+              title: Text(capitalizeFirstLetter(companyData['name'])),
+              subtitle: Text(companyData['role']),
+              // Add other fields you want to display
+            );
+          }
+    
+        }
         );
-      },
-    );
   }
 }

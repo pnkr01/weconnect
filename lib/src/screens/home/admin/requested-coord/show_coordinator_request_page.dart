@@ -14,7 +14,7 @@ class RequestPage extends StatelessWidget {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-            drawer: MainDrawer(userRole: UserRole.coordinator),
+            drawer: MainDrawer(userRole: UserRole.admin),
             appBar: AppBar(
               title: Text(
                 "REQUESTS",

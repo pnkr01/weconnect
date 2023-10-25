@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
+import 'package:weconnect/src/screens/home/coordinators/recent_companies_coord.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class CoordinatorHomePage extends StatelessWidget {
@@ -47,14 +50,6 @@ class CoordinatorHomePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            // leading: IconButton(
-            //     onPressed: () {
-
-            //     },
-            //     icon: Icon(
-            //       Icons.menu,
-            //       color: whiteColor,
-            //     )),
             iconTheme: IconThemeData(color: whiteColor),
             backgroundColor: color1,
             centerTitle: true,
@@ -63,7 +58,7 @@ class CoordinatorHomePage extends StatelessWidget {
               style: TextStyle(color: whiteColor),
             ),
           ),
-          drawer: MainDrawer(userRole: userData?['role']),
+          drawer: MainDrawer(userRole: userData?['role']=="admin" ? UserRole.admin:UserRole.coordinator), //issue us here
           body: userData?['is_verified'] == false
               ? SingleChildScrollView(
                   child: Column(
@@ -94,17 +89,51 @@ class CoordinatorHomePage extends StatelessWidget {
                   ),
                 )
               : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Welcome ${userData?['name'] ?? 'User'}!',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Center(
+                      child: Text(
+                        'Welcome ${userData?['name'] ?? 'User'}!',
+                        style:
+                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     SizedBox(height: 8),
-                    Text(
-                      'Your account is verified!',
-                      style: TextStyle(color: Colors.green),
+                    Center(
+                      child: Text(
+                        'Your account is verified!',
+                        style: TextStyle(color: color2),
+                      ),
                     ),
+                     SizedBox(height: 8),
+                     
+                  InkWell(
+                    onTap: (){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                        return SearchCompaniesCoord();
+                      }));
+                    },
+                    child: Container(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                          color: color2,
+                          boxShadow: [
+                            BoxShadow(blurRadius: 10.0, color: greyColor)
+                          ],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: Text(
+                          "CONTINUE",
+                          style: TextStyle(
+                              color: whiteColor,
+                              fontSize: 20.0,
+                              letterSpacing: 2.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
                   ],
                 ),
         );
