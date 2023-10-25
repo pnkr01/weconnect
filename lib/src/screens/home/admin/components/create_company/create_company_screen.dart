@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/print.dart';
-import 'package:weconnect/src/controllers/adminhome_controller.dart';
+import 'package:weconnect/src/controllers/admin_home_controller.dart';
 import 'package:weconnect/src/db/firebase.dart';
-import 'package:weconnect/src/model/company_model.dart';
-import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
+import 'package:weconnect/src/utils/circle_progress.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
+import 'package:weconnect/src/utils/global.dart';
 
 class CompanyCreation extends StatefulWidget {
   const CompanyCreation({super.key});
@@ -59,8 +59,6 @@ class _CompanyCreationState extends State<CompanyCreation> {
           child: Form(
             key: _formKey,
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.s,
-
               children: [
                 InkWell(
                     onTap: () {
@@ -83,14 +81,11 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                  // ignore: body_might_complete_normally_nullable
-                  //
-                  //  validator: (value) =>
-                  // value!.isEmpty ? "This Field is Mandatory." : value,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
                     }
+                    return null;
                   },
                   controller: controller.nameController,
                   decoration: new InputDecoration(
@@ -153,56 +148,31 @@ class _CompanyCreationState extends State<CompanyCreation> {
                 SizedBox(
                   height: 16,
                 ),
-
                 InkWell(
                   onTap: () async {
+                    CustomCircleLoading.showDialog();
                     if (_formKey.currentState!.validate()) {
-                      controller.saveEntry(
-                          controller.nameController.text,
-                          controller.batchController.text,
-                          controller.compensationController.text,
-                          controller.roleController.text,
-                          controller.setImage(logoImage));
-                      final name = controller.nameController.text;
-                      final batch = controller.batchController.text;
-                      final role = controller.compensationController.text;
-                      final compensation =
-                          controller.roleController.text;
                       await _firebase.saveCompanyInfoToFirestore(
-                          name, batch, role, compensation, logoImage!);
-                          print("stored");
+                          controller.getName,
+                          controller.getBatch,
+                          controller.getRole,
+                          controller.getCompensation,
+                          logoImage!);
+
+                      connectdebugPrint(
+                          "name is ${controller.getName} and batch is ${controller.getBatch} and role is ${controller.getRole} and compensation is ${controller.getCompensation} and logo is $logoImage");
 
                       if (logoImage != null) {
                         await _firebase
                             .uploadImageToFirebaseStorage(logoImage!);
                       }
-                      controller.nameController
-                          .clear(); // Clear the name text field
-                      controller.compensationController
-                          .clear(); // Clear the name text field
-                      controller.roleController
-                          .clear(); // Clear the name text field
-                      controller.batchController
-                          .clear(); // Clear the place text field
-
+                      controller.clearController();
+                      CustomCircleLoading.cancelDialog();
                       Get.back();
-
-                      //    final newCompany = Company(
-                      //   logoImage: logoImage,
-                      //   name: nameController.text,
-                      //   compensation: compensationController.text,
-                      //   batch: batchController.text,
-                      //   role: roleController.text,
-                      // );
-                      //Get.to(() => AdminHomePage());
-
-                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                      //   return AdminHomePage(companies: [  ]);
-                      // }));
-                      //  Navigator.pop(context, newCompany);
+                    } else {
+                      CustomCircleLoading.cancelDialog();
+                      showSnackBar("fill all blanks", redColor, whiteColor);
                     }
-
-                    //
                   },
                   child: Container(
                     height: 40,
@@ -225,14 +195,6 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     ),
                   ),
                 ),
-                //           SizedBox(
-                //             height: 20,
-                //           ),
-                //            Center(
-                //   child: logoImage != null
-                //       ? Image.file(logoImage!,height: 100,width: 100,) // Display the picked image
-                //       : Text('No image selected'), // Show a message if no image is selected
-                // ),
               ],
             ),
           ),

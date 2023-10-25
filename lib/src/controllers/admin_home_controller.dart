@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class HomeController extends GetxController {
   final batchController = TextEditingController();
@@ -10,6 +9,12 @@ class HomeController extends GetxController {
   final roleController = TextEditingController();
   final compensationController = TextEditingController();
   // final  selectedImage =Image.file(null!);
+
+  String get getBatch => batchController.value.text;
+  String get getName => nameController.value.text;
+  String get getRole => roleController.value.text;
+  String get getCompensation => compensationController.value.text;
+
   final savedEntries = <String>[].obs;
   final pickedImage = Rx<File?>(null);
 
@@ -24,13 +29,19 @@ class HomeController extends GetxController {
   }
 
   File? setImage(File? image) {
-    pickedImage.value = image;
+    return pickedImage.value = image;
   }
 
   void saveEntry(String name, String batch, String compensation, String role,
       File? imageFilePath) {
     final entry = "$name - $batch - $role - $compensation-$imageFilePath";
     savedEntries.add(entry);
-   
+  }
+
+  void clearController(){
+    nameController.clear();
+    batchController.clear();
+    roleController.clear();
+    compensationController.clear();
   }
 }
