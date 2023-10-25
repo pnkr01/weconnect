@@ -1,32 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/constant/strings.dart';
 import 'package:weconnect/src/db/local_db.dart';
-import 'package:weconnect/src/model/company_model.dart';
 import 'package:weconnect/src/screens/auth/auth_screen.dart';
 import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
-
-import 'package:weconnect/src/screens/home/admin/requested-coord/request_page.dart';
+import 'package:weconnect/src/screens/home/admin/requested-coord/show_coordinator_request_page.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class MainDrawer extends StatelessWidget {
-  MainDrawer({super.key});
-  final List<Company> companies = [];
+  final UserRole? userRole;
+  MainDrawer({
+    Key? key,
+    required this.userRole,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      shadowColor: whiteColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.only()),
       // backgroundColor: color4,
       child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            buildHeader(context),
-            //      Divider(color: Colors.amber,),
-            buildMenuItems(context),
-          ],
-        ),
+        child: userRole == UserRole.admin
+            ? Column(
+                children: <Widget>[
+                  buildHeader(context),
+                  //      Divider(color: Colors.amber,),
+                  buildMenuItems(context),
+                ],
+              )
+            : Column(
+                children: <Widget>[
+                  buildHeader(context),
+                  buildContent(context),
+                ],
+              ),
       ),
     );
   }
@@ -137,5 +148,23 @@ Widget buildMenuItems(BuildContext context) {
         ),
       ],
     ),
+  );
+}
+
+Widget buildContent(BuildContext context) {
+  return ListTile(
+    leading: Icon(
+      Icons.power_settings_new,
+      color: color2,
+      size: 25,
+    ),
+    title: Text(
+      "Sign Out",
+      style: TextStyle(
+          color: blackColor, fontWeight: FontWeight.w700, letterSpacing: 1.0),
+    ),
+    onTap: () {
+      LocalDB.clearLocalDB();
+    },
   );
 }
