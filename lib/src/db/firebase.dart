@@ -3,25 +3,55 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:weconnect/src/constant/strings.dart';
 import 'package:weconnect/src/db/local_db.dart';
 import 'package:weconnect/src/global/global.dart';
 
 class MyFirebase {
   static FirebaseStorage storage = FirebaseStorage.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
-  static CollectionReference userDataCollection = firestore.collection('users');
+  static CollectionReference userAdminDataCollection =
+      firestore.collection('admin');
+  static CollectionReference userCoordintorDataCollection =
+      firestore.collection('coordinator');
+  static CollectionReference userCoordinatorCollectionRequest =
+      firestore.collection('request');
 
   Future<void> sendUserDataToFirebase(User userAccountModel) async {
-    await userDataCollection.doc(userAccountModel.email).set({
-      "name": userAccountModel.displayName,
-      "imgUrl": userAccountModel.photoURL,
-      "email": userAccountModel.email,
-      "creationTime": userAccountModel.metadata.creationTime,
-      "role": sharedPreferences.getString("role"),
-    });
-    await LocalDB.saveUserProfile(userAccountModel.email ?? "null",
-        userAccountModel.displayName ?? "null");
+    if (userAccountModel.email == adminEmail1) {
+      final adminDoc =
+          await userAdminDataCollection.doc(userAccountModel.email).get();
+
+      if (!adminDoc.exists) {
+        await userAdminDataCollection.doc(userAccountModel.email).set({
+          "name": userAccountModel.displayName,
+          "imgUrl": userAccountModel.photoURL,
+          "email": userAccountModel.email,
+          "creationTime": userAccountModel.metadata.creationTime,
+          "role": sharedPreferences.getString("role"),
+        });
+      }
+    } else {
+      final coordinatorDoc =
+          await userCoordintorDataCollection.doc(userAccountModel.email).get();
+
+      if (!coordinatorDoc.exists) {
+        await userCoordintorDataCollection.doc(userAccountModel.email).set({
+          "name": userAccountModel.displayName,
+          "imgUrl": userAccountModel.photoURL,
+          "email": userAccountModel.email,
+          "creationTime": userAccountModel.metadata.creationTime,
+          "role": sharedPreferences.getString("role"),
+          "is_verified": false,
+        });
+      }
+    }
+    await LocalDB.saveUserProfile(
+      userAccountModel.email ?? "null",
+      userAccountModel.displayName ?? "null",
+    );
   }
+
   //////UPLOADING COMPANY LOGO TO STORAGE////////
 
   Future<String> uploadImageToFirebaseStorage(File imageFile) async {
@@ -46,11 +76,12 @@ class MyFirebase {
       //final user = FirebaseAuth.instance.currentUser;
       String imageUrl = await uploadImageToFirebaseStorage(logoImage);
       final companyData = {
-        'name': name,
+        'name': name.toLowerCase(),
         'batch': batch,
         'role': role,
         'compensation': compensation,
-        'logoImageUrl': imageUrl
+        'logoImageUrl': imageUrl,
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
       };
       final companyRef =
           FirebaseFirestore.instance.collection('companies').doc(name);

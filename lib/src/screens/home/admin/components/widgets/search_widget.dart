@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:weconnect/src/utils/global.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
@@ -86,7 +87,7 @@ class _CompanySearchScreenState extends State<CompanySearchScreen> {
         final companyData =
             _searchResults[index].data() as Map<String, dynamic>;
         return ListTile(
-          title: Text(companyData['name']),
+          title: Text(capitalizeFirstLetter(companyData['name'])),
           subtitle: Text(companyData['role']),
           // Add other fields you want to display
         );

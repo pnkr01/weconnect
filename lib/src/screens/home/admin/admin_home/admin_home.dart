@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/controllers/admin_home_controller.dart';
 import 'package:weconnect/src/screens/home/admin/components/create_company/create_company_screen.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget.dart';
+import 'package:weconnect/src/screens/home/admin/components/widgets/show_recent_comapnies_home_page.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
@@ -33,7 +34,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         ),
         centerTitle: true,
       ),
-      drawer: MainDrawer(),
+      drawer: MainDrawer(userRole: UserRole.admin),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
@@ -57,8 +58,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           searchBarPlaceHolder(),
+          RecentCompaniesWidget(),
         ],
       ),
     );
