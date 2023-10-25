@@ -11,8 +11,6 @@ import 'package:weconnect/src/screens/home/admin/admin_home/screens/company_crea
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
-
-
 class AdminHomePage extends StatefulWidget {
   static const routeName = '/admin-home';
 
@@ -22,17 +20,13 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomePageState extends State<AdminHomePage> {
   final HomeController controller = Get.put(HomeController());
-  
 
   @override
   Widget build(BuildContext context) {
-
-
-         return Scaffold(
+    return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: color1,
-
           title: Text(
             "HOMEPAGE",
             style: TextStyle(
@@ -65,122 +59,117 @@ class _AdminHomePageState extends State<AdminHomePage> {
             ),
           ),
         ),
-
-
         body: StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('companies').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
-        if(!snapshot.hasData || snapshot.data!.docs.isEmpty)
-        {
-          return Text("No Company Data Found");
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
-        }
-        
-        List<QueryDocumentSnapshot> documents=snapshot.data!.docs;
-        return
-        
-        // Obx(
-        //   () =>
-           ListView.builder(
-            itemCount: documents.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-               Map<String, dynamic> data = documents[index].data() as Map<String, dynamic>;
-              ///data from company creation page
-              final entryData = controller.savedEntries[index].split(' - ');
-              final imageFilePath =
-                  controller.getImages(); // Assuming image path is at index 4
-              final name = entryData[0];
-              final role = entryData[2];
+            stream:
+                FirebaseFirestore.instance.collection('companies').snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Text("No Company Data Found");
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
 
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+              List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+              return
 
+                  // Obx(
+                  //   () =>
+                  ListView.builder(
+                itemCount: documents.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> data =
+                      documents[index].data() as Map<String, dynamic>;
+
+                  ///data from company creation page
+                  final entryData = controller.savedEntries[index].split(' - ');
+                  final imageFilePath = controller
+                      .getImages(); // Assuming image path is at index 4
+                  final name = entryData[0];
+                  final role = entryData[2];
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 20),
 
                     ////container//////
-                child: Container(
-                  height: 120,
-                  width: double.infinity,
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10.0,
-                      color: Colors.black
-                    ),
-                  ], borderRadius: BorderRadius.circular(18), color: color2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-
-
-                            ////logo////////////
-                            CircleAvatar(
-                              backgroundImage: imageFilePath != null
-                                  ? FileImage(data['logoImageUrl'])
-                                  : null,                          
-                              radius: 50,
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-
-                                  //////COMPANY NAME//////
-                                  Text(
-                                   data['name'].toString().toUpperCase(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 25.0,
-                                        letterSpacing: 2.0,
-                                        color: whiteColor),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-
-                                  //////ROLE//////////
-                                  Text(data['role'].toString().toUpperCase(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20.0,
-                                          color: whiteColor)),
-                                ],
-                              ),
-                            ),
+                    child: Container(
+                      height: 120,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(blurRadius: 10.0, color: Colors.black),
                           ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.delete,
-                          color: whiteColor,
-                          size: 36,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-      }
-        )
-         );
-      }
-  }
+                          borderRadius: BorderRadius.circular(18),
+                          color: color2),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ////logo////////////
+                                CircleAvatar(
+                                  backgroundImage: imageFilePath != null
+                                      ? FileImage(data['logoImageUrl'])
+                                      : null,
+                                  radius: 50,
+                                ),
 
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      //////COMPANY NAME//////
+                                      Text(
+                                        data['name'].toString().toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25.0,
+                                            letterSpacing: 2.0,
+                                            color: whiteColor),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+
+                                      //////ROLE//////////
+                                      Text(
+                                          data['role'].toString().toUpperCase(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 20.0,
+                                              color: whiteColor)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Icon(
+                              Icons.delete,
+                              color: whiteColor,
+                              size: 36,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }));
+  }
+}
