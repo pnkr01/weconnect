@@ -35,7 +35,9 @@ class PendingCoordinators extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         final documents = snapshot.data!.docs;
