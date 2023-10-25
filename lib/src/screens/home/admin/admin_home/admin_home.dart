@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/controllers/admin_home_controller.dart';
 import 'package:weconnect/src/screens/home/admin/components/create_company/create_company_screen.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder.dart';
@@ -34,7 +35,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         ),
         centerTitle: true,
       ),
-      drawer: MainDrawer(),
+      drawer: MainDrawer(userRole: UserRole.admin),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
