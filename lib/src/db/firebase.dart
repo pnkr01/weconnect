@@ -46,7 +46,7 @@ class MyFirebase {
       //final user = FirebaseAuth.instance.currentUser;
       String imageUrl = await uploadImageToFirebaseStorage(logoImage);
       final companyData = {
-        'name': name,
+        'name': name.toLowerCase(),
         'batch': batch,
         'role': role,
         'compensation': compensation,

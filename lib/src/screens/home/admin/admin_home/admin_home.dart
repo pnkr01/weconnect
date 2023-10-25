@@ -4,7 +4,6 @@ import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/controllers/admin_home_controller.dart';
 import 'package:weconnect/src/screens/home/admin/components/create_company/create_company_screen.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
