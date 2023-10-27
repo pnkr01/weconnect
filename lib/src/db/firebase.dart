@@ -143,12 +143,13 @@ class MyFirebase {
 
    
 
-   Future<void> saveCompanyTestimonialsInfoToFirestore(String studentName, String role,
+   Future<void> saveCompanyTestimonialsInfoToFirestore(String companyName, String studentName, String role,
       String topic, String questions, List<File> selectedImages) async {
     try {
       //final user = FirebaseAuth.instance.currentUser;
       List<String> imageUrls = await uploadTestimonialImageToFirebaseStorage(selectedImages);
       final companyTestimonialData = {
+        'companyName':companyName,
         'studentName': studentName.toLowerCase(),
         'role': role,
         'topic': topic,
@@ -157,7 +158,7 @@ class MyFirebase {
         "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
       };
       final companyRef =
-          FirebaseFirestore.instance.collection('company-testimonials').doc(studentName);
+          FirebaseFirestore.instance.collection('company-testimonials').doc(companyName);
       await companyRef.set(companyTestimonialData);
 
       await companyRef.set(companyTestimonialData, SetOptions(merge: true));

@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:record/record.dart';
+
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/db/firebase.dart';
@@ -26,9 +24,9 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isRecording = false;
-  late Record audioRecord;
-  late AudioPlayer audioPlayer;
-
+  // late Record audioRecord;
+  // late AudioPlayer audioPlayer;
+  final companyNameController = TextEditingController();
   final studentNameController = TextEditingController();
   final roleController = TextEditingController();
   final topicController = TextEditingController();
@@ -75,7 +73,24 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                     }
                     return null;
                   },
-                  //controller: controller.nameController,
+                  controller: companyNameController,
+                  decoration: new InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    hintText: 'Enter Company Name',
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "This Field is Mandatory.";
+                    }
+                    return null;
+                  },
+                  controller: studentNameController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -92,7 +107,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                     }
                     return null;
                   },
-                  //controller: controller.nameController,
+                  controller: roleController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -109,7 +124,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                     }
                     return null;
                   },
-                  //controller: controller.nameController,
+                  controller:topicController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -128,7 +143,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                     }
                     return null;
                   },
-                  //controller: controller.nameController,
+                  controller:questionsController,
                   decoration: new InputDecoration(
                     //  hintMaxLines: 1000,
                     //helperMaxLines: 1000,
@@ -192,6 +207,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                     if (_formKey.currentState!.validate() &&
                         selectedImages != null) {
                       await _firebase.saveCompanyTestimonialsInfoToFirestore(
+                        companyNameController.text,
                         studentNameController.text,
                         roleController.text,
                         topicController.text,
@@ -202,7 +218,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                       // connectdebugPrint(
                       //     "name is ${} and batch is ${} and role is ${} and compensation is ${}");
 
-                    
+                      companyNameController.clear();
                       studentNameController.clear();
                       roleController.clear();
                       topicController.clear();
