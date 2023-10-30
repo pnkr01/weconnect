@@ -9,12 +9,12 @@ import 'package:weconnect/src/utils/global.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
-class CompanySearchScreen extends StatefulWidget {
+class CompanySearchScreenAdmin extends StatefulWidget {
   @override
-  _CompanySearchScreenState createState() => _CompanySearchScreenState();
+  _CompanySearchScreenAdminState createState() => _CompanySearchScreenAdminState();
 }
 
-class _CompanySearchScreenState extends State<CompanySearchScreen> {
+class _CompanySearchScreenAdminState extends State<CompanySearchScreenAdmin> {
   final TextEditingController _searchController = TextEditingController();
   List<DocumentSnapshot> _searchResults = [];
 
@@ -91,28 +91,31 @@ class _CompanySearchScreenState extends State<CompanySearchScreen> {
         itemBuilder: (context, index) {
           final companyData =
               _searchResults[index].data() as Map<String, dynamic>;
-          if (UserRole.admin == true) {
-            return Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Container(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width*0.8,
-                  decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
-                    borderRadius: BorderRadius.circular(16),
-                    color: greyCOlor
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0,top: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                        Text(companyData['role'])
-                      ],
+          
+            return InkWell(
+              onTap: (){},
+              child: Padding(
+                  padding: const EdgeInsets.all(13.0),
+                  child: Container(
+                    height: 60,
+                    width: MediaQuery.of(context).size.width*0.8,
+                    decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
+                      borderRadius: BorderRadius.circular(16),
+                      color: greyCOlor
                     ),
-                  ),
-                  ),);
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0,top: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                          Text(companyData['role'])
+                        ],
+                      ),
+                    ),
+                    ),),
+            );
             
             //  ListTile(
 
@@ -123,38 +126,38 @@ class _CompanySearchScreenState extends State<CompanySearchScreen> {
             //   subtitle: Text(companyData['role']),
             //   // Add other fields you want to display
             // );
-          } else {
+          // } else {
 
-            return InkWell(
-              onTap: ()
-              {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return CompanyTestimonials();
-                }));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Container(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width*0.8,
-                  decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
-                    borderRadius: BorderRadius.circular(16),
-                    color: greyCOlor
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0,top: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                        Text(companyData['role'])
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
+          //   return InkWell(
+          //     onTap: ()
+          //     {
+          //         Navigator.push(context, MaterialPageRoute(builder: (context) {
+          //         return CompanyTestimonials();
+          //       }));
+          //     },
+          //     child: Padding(
+          //       padding: const EdgeInsets.all(13.0),
+          //       child: Container(
+          //         height: 60,
+          //         width: MediaQuery.of(context).size.width*0.8,
+          //         decoration: BoxDecoration(
+          //           boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
+          //           borderRadius: BorderRadius.circular(16),
+          //           color: greyCOlor
+          //         ),
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(left: 20.0,top: 10),
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+          //               Text(companyData['role'])
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   );
             
             
             // ListTile(
@@ -168,8 +171,7 @@ class _CompanySearchScreenState extends State<CompanySearchScreen> {
             //   // Add other fields you want to display
             // );
           }
-    
-        }
+  
         );
   }
 }

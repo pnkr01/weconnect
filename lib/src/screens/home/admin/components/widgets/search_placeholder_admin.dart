@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget.dart';
+import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget_admin.dart';
+import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget_coord.dart';
 
-Widget searchBarPlaceHolder() => Padding(
+Widget searchBarPlaceHolderCoord() => Padding(
       padding: const EdgeInsets.all(16.0),
       child: InkWell(
-        onTap: () => Get.to(() => CompanySearchScreen()),
+        onTap: () => Get.to(() => CompanySearchScreenCoord()),
         child: Card(
           elevation: 5.0,
           shape: RoundedRectangleBorder(
