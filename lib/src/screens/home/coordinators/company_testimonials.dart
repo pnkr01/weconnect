@@ -215,8 +215,6 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                         selectedImages!,
                       );
 
-                      // connectdebugPrint(
-                      //     "name is ${} and batch is ${} and role is ${} and compensation is ${}");
 
                       companyNameController.clear();
                       studentNameController.clear();

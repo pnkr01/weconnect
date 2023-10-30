@@ -92,26 +92,81 @@ class _CompanySearchScreenState extends State<CompanySearchScreen> {
           final companyData =
               _searchResults[index].data() as Map<String, dynamic>;
           if (UserRole.admin == true) {
-            return ListTile(
-              onTap: () {
+            return Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width*0.8,
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
+                    borderRadius: BorderRadius.circular(16),
+                    color: greyCOlor
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0,top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                        Text(companyData['role'])
+                      ],
+                    ),
+                  ),
+                  ),);
+            
+            //  ListTile(
+
+            //   onTap: () {
                 
-              },
-              title: Text(capitalizeFirstLetter(companyData['name'])),
-              subtitle: Text(companyData['role']),
-              // Add other fields you want to display
-            );
+            //   },
+            //   title: Text(capitalizeFirstLetter(companyData['name'])),
+            //   subtitle: Text(companyData['role']),
+            //   // Add other fields you want to display
+            // );
           } else {
 
-            return ListTile(
-              onTap: () {
-               Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return InkWell(
+              onTap: ()
+              {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return CompanyTestimonials();
                 }));
               },
-              title: Text(capitalizeFirstLetter(companyData['name'])),
-              subtitle: Text(companyData['role']),
-              // Add other fields you want to display
+              child: Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width*0.8,
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
+                    borderRadius: BorderRadius.circular(16),
+                    color: greyCOlor
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0,top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                        Text(companyData['role'])
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             );
+            
+            
+            // ListTile(
+            //   onTap: () {
+            //    Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //       return CompanyTestimonials();
+            //     }));
+            //   },
+            //   title: Text(capitalizeFirstLetter(companyData['name'])),
+            //   subtitle: Text(companyData['role']),
+            //   // Add other fields you want to display
+            // );
           }
     
         }
