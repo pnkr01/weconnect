@@ -33,7 +33,7 @@ return Column(
             Center(
               child: Text(
                 'RECENT COMPANIES',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,letterSpacing: 2.0),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,letterSpacing: 1.0),
               ),
             ),
             SizedBox(height: 8),
@@ -57,7 +57,7 @@ return Column(
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(company['logoImageUrl']),
-                        radius: 70,
+                        radius: 49,
                       ),
                     ),
                     Text(company['name'].toString().toUpperCase(),style: TextStyle(color: whiteColor,fontSize: 18,fontWeight: FontWeight.bold),),
