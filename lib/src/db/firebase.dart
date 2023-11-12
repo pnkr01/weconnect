@@ -21,7 +21,7 @@ class MyFirebase {
       firestore.collection('companies');
 
   Future<void> sendUserDataToFirebase(User userAccountModel) async {
-    if (userAccountModel.email == adminEmail1) {
+    if (adminEmail1.contains(userAccountModel.email)) {
       final adminDoc =
           await userAdminDataCollection.doc(userAccountModel.email).get();
 

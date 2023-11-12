@@ -1,6 +1,5 @@
 //###############-------Admin Start---------####################
-final String adminEmail1 = "infokumar66@gmail.com";
-final String adminEmail2 = "harshitaacharya03@gmail.com";
+final List adminEmail1 = ["harshitaacharya03@gmail.com"];
 //###############-------Admin End---------####################
 
 //###############-------Coordinator---------####################
@@ -11,3 +10,9 @@ final String adminEmail2 = "harshitaacharya03@gmail.com";
 String photoAvatorUrl =
     "https://img.icons8.com/dusk/64/circled-user-male-skin-type-3.png";
 //###############-------drawer.dart End---------####################
+
+//###############-------Icon Image Start---------####################
+
+String iconImage = "assets/images/icon.png";
+
+//###############-------Icon Image End---------####################

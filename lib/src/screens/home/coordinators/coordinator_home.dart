@@ -23,7 +23,7 @@ class CoordinatorHomePage extends StatelessWidget {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        if (snapshot.connectionState != ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
               leading: Icon(Icons.menu),
@@ -48,94 +48,49 @@ class CoordinatorHomePage extends StatelessWidget {
         final userData = snapshot.data?.data() as Map<String, dynamic>?;
 
         return Scaffold(
-          appBar: AppBar(
-            iconTheme: IconThemeData(color: whiteColor),
-            backgroundColor: color1,
-            centerTitle: true,
-            title: Text(
-              'Sangrah',
-              style: TextStyle(color: whiteColor),
+            appBar: AppBar(
+              iconTheme: IconThemeData(color: whiteColor),
+              backgroundColor: color1,
+              centerTitle: true,
+              title: Text(
+                'Sangrah',
+                style: TextStyle(color: whiteColor),
+              ),
             ),
-          ),
-          drawer: MainDrawer(userRole: userData?['role']=="admin" ? UserRole.admin:UserRole.coordinator), //issue us here
-          body: userData?['is_verified'] == false
-              ? SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Center(
-                        child: Image.asset(
-                          "assets/images/verify.png",
-                          height: 100,
-                          fit: BoxFit.cover,
-                          width: 100,
+            drawer: MainDrawer(
+                userRole: userData?['role'] == "admin"
+                    ? UserRole.admin
+                    : UserRole.coordinator), //issue us here
+            body: userData?['is_verified'] == false
+                ? SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 40,
                         ),
-                      ),
-                      Text(
-                        'Welcome ${userData?['name'] ?? 'User'}!',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Verification Pending',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Welcome ${userData?['name'] ?? 'User'}!',
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Center(
-                      child: Text(
-                        'Your account is verified!',
-                        style: TextStyle(color: color2),
-                      ),
-                    ),
-                     SizedBox(height: 8),
-                     
-                  InkWell(
-                    onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                        return SearchCompaniesCoord();
-                      }));
-                    },
-                    child: Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      decoration: BoxDecoration(
-                          color: color2,
-                          boxShadow: [
-                            BoxShadow(blurRadius: 10.0, color: greyColor)
-                          ],
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          "CONTINUE",
+                        Center(
+                          child: Image.asset(
+                            "assets/images/verify.png",
+                            height: 100,
+                            fit: BoxFit.cover,
+                            width: 100,
+                          ),
+                        ),
+                        Text(
+                          'Welcome ${userData?['name'] ?? 'User'}!',
                           style: TextStyle(
-                              color: whiteColor,
-                              fontSize: 20.0,
-                              letterSpacing: 2.0,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                      ),
+                        Text(
+                          'Verification Pending from admin side!',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
                     ),
-                  ),
-                  ],
-                ),
-        );
+                  )
+                : SearchCompaniesCoord());
       },
     );
   }

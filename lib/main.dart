@@ -6,7 +6,6 @@ import 'package:weconnect/firebase_options.dart';
 import 'package:weconnect/src/app.dart';
 import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/db/local_db.dart';
-
 import 'src/global/global.dart';
 
 Future<void> main() async {

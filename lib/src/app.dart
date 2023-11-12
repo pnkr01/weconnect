@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) => GetMaterialApp(
-        
         initialBinding: AllBindings(),
         debugShowCheckedModeBanner: false,
         title: 'We Connect',

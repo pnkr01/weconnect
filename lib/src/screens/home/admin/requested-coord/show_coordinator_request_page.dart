@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
-import 'package:weconnect/src/screens/home/admin/requested-coord/accepted-coord.dart';
-import 'package:weconnect/src/screens/home/admin/requested-coord/pending-coord.dart';
+import 'package:weconnect/src/screens/home/admin/requested-coord/accepted-coordinators.dart';
+import 'package:weconnect/src/screens/home/admin/requested-coord/pending-coordinators.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class RequestPage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget_coord.dart';
+import 'package:weconnect/src/screens/home/coordinators/components/coordinator_search.dart';
 
 Widget searchBarPlaceHolderCoord() => Padding(
       padding: const EdgeInsets.all(16.0),
