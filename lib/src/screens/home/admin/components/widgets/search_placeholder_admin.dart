@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget_admin.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_widget_coord.dart';
 
 Widget searchBarPlaceHolderCoord() => Padding(

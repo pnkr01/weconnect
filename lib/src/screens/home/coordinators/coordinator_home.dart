@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
@@ -24,7 +23,7 @@ class CoordinatorHomePage extends StatelessWidget {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState != ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
               leading: Icon(Icons.menu),

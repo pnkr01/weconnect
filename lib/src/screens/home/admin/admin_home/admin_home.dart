@@ -5,8 +5,7 @@ import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/controllers/admin_home_controller.dart';
 import 'package:weconnect/src/screens/home/admin/components/create_company/create_company_screen.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder_coord.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/show_recent_comapnies_home_page%20copy_admin.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/show_recent_comapnies_home_page_coord.dart';
+import 'package:weconnect/src/screens/home/admin/components/widgets/show_recent_comapnies_home_page_admin.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
@@ -16,7 +15,6 @@ class AdminHomePage extends StatefulWidget {
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
 }
-
 
 class _AdminHomePageState extends State<AdminHomePage> {
   final HomeController controller = Get.put(HomeController());

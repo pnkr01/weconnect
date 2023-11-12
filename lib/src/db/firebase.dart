@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:weconnect/src/constant/strings.dart';
 import 'package:weconnect/src/db/local_db.dart';
 import 'package:weconnect/src/global/global.dart';
+import 'package:weconnect/src/utils/circle_progress.dart';
 
 class MyFirebase {
   static FirebaseStorage storage = FirebaseStorage.instance;
@@ -16,6 +17,8 @@ class MyFirebase {
       firestore.collection('coordinator');
   static CollectionReference userCoordinatorCollectionRequest =
       firestore.collection('request');
+  static CollectionReference companyCollection =
+      firestore.collection('companies');
 
   Future<void> sendUserDataToFirebase(User userAccountModel) async {
     if (userAccountModel.email == adminEmail1) {
@@ -70,86 +73,97 @@ class MyFirebase {
   }
   //////////UPLOADING COMPANY DATA TO FIRESTORE DB/////////////
 
-  Future<void> saveCompanyInfoToFirestore(String name, String batch,
+  Future<bool> saveCompanyInfoToFirestore(String name, String batch,
       String role, String compensation, File logoImage) async {
-    try {
-      //final user = FirebaseAuth.instance.currentUser;
-      String imageUrl = await uploadImageToFirebaseStorage(logoImage);
-      final companyData = {
-        'name': name.toLowerCase(),
-        'batch': batch,
-        'role': role,
-        'compensation': compensation,
-        'logoImageUrl': imageUrl,
-        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
-      };
-      final companyRef =
-          FirebaseFirestore.instance.collection('companies').doc(name);
+    //check if company already exists
+    final companyDoc = await companyCollection.doc(name).get();
 
-      await companyRef.set(companyData);
+    if (!companyDoc.exists) {
+      CustomCircleLoading.cancelDialog();
+      return false;
+    } else {
+      try {
+        //final user = FirebaseAuth.instance.currentUser;
+        String imageUrl = await uploadImageToFirebaseStorage(logoImage);
+        final companyData = {
+          'name': name.toLowerCase(),
+          'batch': batch,
+          'role': role,
+          'compensation': compensation,
+          'logoImageUrl': imageUrl,
+          "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+        };
+        final companyRef =
+            FirebaseFirestore.instance.collection('companies').doc(name);
 
-      await companyRef.set(companyData, SetOptions(merge: true));
-    } catch (e) {
-      print('Error saving company information: $e');
-    }
-  }
+        await companyRef.set(companyData);
 
-
-   Future<List<String>> uploadTestimonialImageToFirebaseStorage(List<File> selectedImages) async {
-   
-  // Initialize Firebase Storage
-  final FirebaseStorage storage = FirebaseStorage.instance;
-
-  // Create a reference to the Firebase Storage bucket and folder where you want to store the images
-  final Reference storageRef = storage.ref().child('testimonial-images');
-
-  // List to store URLs of uploaded images
-  List<String> uploadedImageUrls = [];
-
-  for (File image in selectedImages) {
-    try {
-      // Generate a unique filename for each image
-      final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-      // Create a reference to the image file in Firebase Storage
-      final Reference imageRef = storageRef.child(fileName);
-
-      // Upload the image to Firebase Storage
-      final UploadTask uploadTask = imageRef.putFile(File(image.path));
-
-      // Get the upload task's snapshot to track the progress
-      final TaskSnapshot snapshot = await uploadTask;
-
-      // Check if the upload was successful
-      if (snapshot.state == TaskState.success) {
-        // Get the download URL for the uploaded image
-        final String downloadUrl = await imageRef.getDownloadURL();
-
-        // Add the download URL to the list of uploaded image URLs
-        uploadedImageUrls.add(downloadUrl);
-      } else {
-        // Handle upload failure
-        print('Image upload failed');
+        await companyRef.set(companyData, SetOptions(merge: true));
+      } catch (e) {
+        print('Error saving company information: $e');
       }
-    } catch (e) {
-      // Handle any errors that occur during the upload process
-      print('Error uploading image: $e');
+      return true;
     }
-    
-    
   }
+
+  Future<List<String>> uploadTestimonialImageToFirebaseStorage(
+      List<File> selectedImages) async {
+    // Initialize Firebase Storage
+    final FirebaseStorage storage = FirebaseStorage.instance;
+
+    // Create a reference to the Firebase Storage bucket and folder where you want to store the images
+    final Reference storageRef = storage.ref().child('testimonial-images');
+
+    // List to store URLs of uploaded images
+    List<String> uploadedImageUrls = [];
+
+    for (File image in selectedImages) {
+      try {
+        // Generate a unique filename for each image
+        final String fileName =
+            DateTime.now().millisecondsSinceEpoch.toString();
+
+        // Create a reference to the image file in Firebase Storage
+        final Reference imageRef = storageRef.child(fileName);
+
+        // Upload the image to Firebase Storage
+        final UploadTask uploadTask = imageRef.putFile(File(image.path));
+
+        // Get the upload task's snapshot to track the progress
+        final TaskSnapshot snapshot = await uploadTask;
+
+        // Check if the upload was successful
+        if (snapshot.state == TaskState.success) {
+          // Get the download URL for the uploaded image
+          final String downloadUrl = await imageRef.getDownloadURL();
+
+          // Add the download URL to the list of uploaded image URLs
+          uploadedImageUrls.add(downloadUrl);
+        } else {
+          // Handle upload failure
+          print('Image upload failed');
+        }
+      } catch (e) {
+        // Handle any errors that occur during the upload process
+        print('Error uploading image: $e');
+      }
+    }
     return uploadedImageUrls;
-}
+  }
 
-   
-
-   Future<void> saveCompanyTestimonialsInfoToFirestore(String companyName, String studentName, String role,
-      String topic, String questions, List<File> selectedImages) async {
+  Future<void> saveCompanyTestimonialsInfoToFirestore(
+      String companyName,
+      String studentName,
+      String role,
+      String topic,
+      String questions,
+      List<File> selectedImages) async {
     try {
       //final user = FirebaseAuth.instance.currentUser;
-      List<String> imageUrls = await uploadTestimonialImageToFirebaseStorage(selectedImages);
+      List<String> imageUrls =
+          await uploadTestimonialImageToFirebaseStorage(selectedImages);
       final companyTestimonialData = {
-        'companyName':companyName,
+        'companyName': companyName,
         'studentName': studentName.toLowerCase(),
         'role': role,
         'topic': topic,
@@ -157,8 +171,9 @@ class MyFirebase {
         'selectedImages': imageUrls,
         "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
       };
-      final companyRef =
-          FirebaseFirestore.instance.collection('company-testimonials').doc(companyName);
+      final companyRef = FirebaseFirestore.instance
+          .collection('company-testimonials')
+          .doc(companyName);
       await companyRef.set(companyTestimonialData);
 
       await companyRef.set(companyTestimonialData, SetOptions(merge: true));

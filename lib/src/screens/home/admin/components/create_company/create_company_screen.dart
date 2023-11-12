@@ -6,6 +6,7 @@ import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/controllers/admin_home_controller.dart';
 import 'package:weconnect/src/db/firebase.dart';
+import 'package:weconnect/src/screens/home/admin/components/widgets/alert.dart';
 import 'package:weconnect/src/utils/circle_progress.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 import 'package:weconnect/src/utils/global.dart';
@@ -104,6 +105,23 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     }
                     return null;
                   },
+                  controller: controller.roleController,
+                  decoration: new InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    hintText: 'Enter Job Profile',
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "This Field is Mandatory.";
+                    }
+                    return null;
+                  },
                   controller: controller.compensationController,
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
@@ -131,52 +149,42 @@ class _CompanyCreationState extends State<CompanyCreation> {
                 SizedBox(
                   height: 16,
                 ),
-                TextFormField(
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "This Field is Mandatory.";
-                    }
-                    return null;
-                  },
-                  controller: controller.roleController,
-                  decoration: new InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    hintText: 'Enter Role',
-                  ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
                 InkWell(
                   onTap: () async {
                     CustomCircleLoading.showDialog();
                     if (_formKey.currentState!.validate()) {
-                      await _firebase.saveCompanyInfoToFirestore(
-                          controller.getName,
-                          controller.getBatch,
-                          controller.getRole,
-                          controller.getCompensation,
-                          logoImage!);
+                      bool isNewCompany =
+                          await _firebase.saveCompanyInfoToFirestore(
+                              controller.getName,
+                              controller.getBatch,
+                              controller.getRole,
+                              controller.getCompensation,
+                              logoImage!);
 
                       connectdebugPrint(
                           "name is ${controller.getName} and batch is ${controller.getBatch} and role is ${controller.getRole} and compensation is ${controller.getCompensation} and logo is $logoImage");
 
-                      if (logoImage != null) {
+                      connectdebugPrint("is new company $isNewCompany");
+
+                      if (logoImage != null && isNewCompany) {
                         await _firebase
                             .uploadImageToFirebaseStorage(logoImage!);
+                        controller.clearController();
+                        CustomCircleLoading.cancelDialog();
+                        Get.back();
+                      } else {
+                        showAlert(context, "Company Alert",
+                            "This company already exist");
+                        controller.clearController();
                       }
-                      controller.clearController();
-                      CustomCircleLoading.cancelDialog();
-                      Get.back();
                     } else {
                       CustomCircleLoading.cancelDialog();
-                      showSnackBar("fill all blanks", redColor, whiteColor);
+                      showSnackBar("fill all blanks", color1, whiteColor);
                     }
                   },
                   child: Container(
                     height: 40,
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                         color: color2,
                         boxShadow: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 late SharedPreferences sharedPreferences;
 
@@ -11,7 +12,8 @@ showSnackBar(var message, Color color, Color? textColor) {
   return Get.rawSnackbar(
       title: appName,
       messageText: Text(
-        message.toString(),
+        capitalizeFirstLetter(message.toString()),
+        style: TextStyle(color: whiteColor),
       ),
       // message: message,
       backgroundColor: color,

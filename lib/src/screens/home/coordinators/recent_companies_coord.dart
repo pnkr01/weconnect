@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder_admin.dart';
-import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder_coord.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/show_recent_comapnies_home_page_coord.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';

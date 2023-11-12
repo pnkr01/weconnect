@@ -1,12 +1,8 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:weconnect/src/constant/color_codes.dart';
-import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/db/firebase.dart';
 import 'package:weconnect/src/utils/circle_progress.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
@@ -37,6 +33,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
   Future<void> _pickImages() async {
     final pickedImages = await ImagePicker().pickMultiImage();
 
+    // ignore: unnecessary_null_comparison
     if (pickedImages != null) {
       selectedImages = pickedImages.map((xfile) => File(xfile.path)).toList();
       setState(() {});

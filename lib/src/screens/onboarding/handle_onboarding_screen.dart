@@ -10,6 +10,7 @@ class HandleOnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.find<OnBoardingController>().startCaller();
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

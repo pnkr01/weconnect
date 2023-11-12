@@ -2,8 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/screens/home/coordinators/company_testimonials.dart';
 import 'package:weconnect/src/utils/global.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
