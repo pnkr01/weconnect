@@ -11,7 +11,7 @@ class HomeController extends GetxController {
   // final  selectedImage =Image.file(null!);
 
   String get getBatch => batchController.value.text;
-  String get getName => nameController.value.text;
+  String get getName => nameController.value.text.toLowerCase();
   String get getRole => roleController.value.text;
   String get getCompensation => compensationController.value.text;
 

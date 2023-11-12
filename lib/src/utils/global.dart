@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weconnect/src/utils/gloabal_colors.dart';
+import 'package:weconnect/src/widget/alert_widget.dart';
 
 late SharedPreferences sharedPreferences;
 
@@ -11,7 +13,8 @@ showSnackBar(var message, Color color, Color? textColor) {
   return Get.rawSnackbar(
       title: appName,
       messageText: Text(
-        message.toString(),
+        capitalizeFirstLetter(message.toString()),
+        style: TextStyle(color: whiteColor),
       ),
       // message: message,
       backgroundColor: color,
@@ -29,4 +32,23 @@ showSnackBar(var message, Color color, Color? textColor) {
 String capitalizeFirstLetter(String input) {
   if (input.isEmpty) return input;
   return input[0].toUpperCase() + input.substring(1);
+}
+
+void showCustomAlertDialog(String title, String description) {
+  Get.dialog(
+    barrierDismissible: false,
+    CustomAlertDialog(
+      title: title,
+      description: description,
+    ),
+  );
+}
+void showAlertDialog(String title, String description) {
+  Get.dialog(
+    barrierDismissible: false,
+    CustomAlertDialog(
+      title: title,
+      description: description,
+    ),
+  );
 }
