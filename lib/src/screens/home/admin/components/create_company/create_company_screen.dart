@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
@@ -99,6 +100,8 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
+                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -116,6 +119,8 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -133,6 +138,8 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))],
+                  keyboardType:TextInputType.text,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";

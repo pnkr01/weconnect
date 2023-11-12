@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
@@ -81,6 +82,8 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                   height: 8,
                 ),
                 TextFormField(
+                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))],
+                  keyboardType:TextInputType.text,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -98,6 +101,8 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                   height: 8,
                 ),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))],
+                  keyboardType:TextInputType.text,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -106,6 +111,7 @@ class _CompanyTestimonialsState extends State<CompanyTestimonials> {
                   },
                   controller: roleController,
                   decoration: new InputDecoration(
+                  
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
                     hintText: 'Enter Role',
