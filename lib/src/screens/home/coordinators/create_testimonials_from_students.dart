@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:choice/choice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
@@ -21,6 +23,8 @@ class CreateTestimonialFromStudent extends StatefulWidget {
 
 class _CreateTestimonialFromStudentState
     extends State<CreateTestimonialFromStudent> {
+      final batchController = TextEditingController();
+  final regdController = TextEditingController();
   List<String> stackChoices = [
     'SRE',
     'SDE',
@@ -47,10 +51,21 @@ class _CreateTestimonialFromStudentState
     'SOFT',
     'TECH+APTI+SOFT',
   ];
+  List<String> batches=[
+    '2023',
+    '2024',
+    '2025',
+    '2026',
+    '2027',
+    '2028',
+    '2029',
+    '2030',
+  ];
 
   String? selectedValue;
   String? selectedCourseValue;
   String? selectedTopicValue;
+  String? selectedBatchValue;
 
   void setSelectedValue(String? value) {
     setState(() => selectedValue = value);
@@ -63,7 +78,40 @@ class _CreateTestimonialFromStudentState
   void setSelectedTopicValue(String? value) {
     setState(() => selectedTopicValue = value);
   }
+  void setSelectedBatchValue(String? value) {
+    setState(() => selectedBatchValue = value);
+  }
+Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) async {
+    if (selectedValue!.isNotEmpty &&selectedCourseValue!.isNotEmpty&&selectedTopicValue!.isNotEmpty&&selectedBatchValue!.isNotEmpty) {
+      try {
+         List<String> imageUrls =
+          await  _firebase.uploadTestimonialImageToFirebaseStorage(selectedImages);
+           CollectionReference companyTestimonials = FirebaseFirestore.instance.collection(selectedBatchValue!);
+        final companyTestimonialData = {
+          'stack': selectedValue,
+          'course': selectedCourseValue,
+          'topic': selectedTopicValue,
+          'timestamp': FieldValue.serverTimestamp(), 
+          'selectedImages': imageUrls,
+          'batch':selectedBatchValue,
+          'registration no.':regd
 
+      };
+        //final companyRef = 
+        companyTestimonials.doc('Testimonials').collection(companyName).doc(regd).set(companyTestimonialData);
+      //     .collection(companyName)
+      //     .doc(selectedValue);
+      // await companyRef.set(companyTestimonialData);
+
+      // await companyRef.set(companyTestimonialData, SetOptions(merge: true));
+    } catch (e) {
+      print('Error saving company information: $e');
+    }
+
+
+    
+  }
+}
   MyFirebase _firebase = MyFirebase();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final String companyName = Get.arguments["companyName"];
@@ -184,6 +232,50 @@ class _CreateTestimonialFromStudentState
                     ),
                   ),
                 ),
+                Align(
+                  child: Text("Select Batch"),
+                  alignment: Alignment.bottomLeft,
+                ),
+                Choice<String>.inline(
+                  clearable: true,
+                  value: ChoiceSingle.value(selectedBatchValue),
+                  onChanged: ChoiceSingle.onChanged(setSelectedBatchValue),
+                  itemCount: batches.length,
+                  itemBuilder: (state, i) {
+                    return ChoiceChip(
+                      selected: state.selected(batches[i]),
+                      onSelected: state.onSelected(batches[i]),
+                      label: Text(batches[i]),
+                    );
+                  },
+                  listBuilder: ChoiceList.createScrollable(
+                    spacing: 10,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 0,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+                
+                SizedBox(height: 12,),
+                 TextFormField(
+                  maxLength: 10,
+                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "This Field is Mandatory.";
+                    }
+                    return null;
+                  },
+                  controller: regdController,
+                  decoration: new InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    hintText: 'Enter Registration No.',
+                  ),
+                ),
+                 SizedBox(height: 12,),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -203,6 +295,7 @@ class _CreateTestimonialFromStudentState
                 SizedBox(
                   height: 8,
                 ),
+
                 InkWell(
                   onTap: () {
                     _pickImages();
@@ -248,29 +341,36 @@ class _CreateTestimonialFromStudentState
                 InkWell(
                   onTap: () async {
                     CustomCircleLoading.showDialog();
-                    if (selectedImages != null) {
+                   
+                    if (_formKey.currentState!.validate()&& selectedImages != null && selectedValue!=null&&selectedCourseValue!=null &&selectedTopicValue!=null&&selectedBatchValue!=null) {
                       await _firebase.uploadTestimonialImageToFirebaseStorage(
                           selectedImages!);
-                    }
-                    if (_formKey.currentState!.validate() &&
-                        selectedImages != null) {
-                      await _firebase.saveCompanyTestimonialsInfoToFirestore(
-                        companyNameController.text,
-                        studentNameController.text,
-                        roleController.text,
-                        topicController.text,
-                        questionsController.text,
-                        selectedImages!,
-                      );
-
-                      companyNameController.clear();
-                      studentNameController.clear();
-                      roleController.clear();
-                      topicController.clear();
-                      questionsController.clear();
+                      saveTestimonialsToFirebase(regdController.text,selectedImages!);
                       CustomCircleLoading.cancelDialog();
-                      Get.back();
-                    } else {
+                       Get.back();
+                    }
+                    
+                    // if (_formKey.currentState!.validate() &&
+                    //     selectedImages != null) {
+                    //   await _firebase.saveCompanyTestimonialsInfoToFirestore(
+                    //     companyNameController.text,
+                    //     studentNameController.text,
+                    //     roleController.text,
+                    //     topicController.text,
+                    //     questionsController.text,
+                    //     selectedImages!,
+                    //   );
+
+                    //   companyNameController.clear();
+                    //   studentNameController.clear();
+                    //   roleController.clear();
+                    //   topicController.clear();
+                    //   questionsController.clear();
+                      // CustomCircleLoading.cancelDialog();
+                    //  
+                    // } 
+                    
+                    else {
                       CustomCircleLoading.cancelDialog();
                       showSnackBar("fill all blanks", redColor, whiteColor);
                     }
