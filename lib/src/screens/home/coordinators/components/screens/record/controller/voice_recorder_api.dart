@@ -5,7 +5,7 @@ class SoundRecorder {
   FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   bool _isRecorderInitialized = false;
 
-  bool get isRecording => !_recorder.isRecording;
+  bool get isRecording => _recorder.isRecording;
 
   final pathToSave = 'testimonials.aac';
 
