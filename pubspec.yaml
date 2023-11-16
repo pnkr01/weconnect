@@ -51,6 +51,8 @@ dependencies:
   choice: ^2.3.0
   flutter_voice_recorder: ^0.0.2
   path_provider: ^2.1.1
+  flutter_sound_lite: ^8.5.0
+  permission_handler: ^11.0.1
   # audioplayers: ^5.2.0
   # record: ^5.0.1
   # permission_handler: ^11.0.1

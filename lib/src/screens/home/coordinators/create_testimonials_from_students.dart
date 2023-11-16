@@ -287,7 +287,7 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                       ),
                     ),
                     onPressed: () {
-                      Get.to(() => RecordAudioPage());
+                      Get.to(() => RecordTestimonialClass());
                     },
                     child: Text('Record Audio'),
                   ),
