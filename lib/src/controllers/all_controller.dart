@@ -11,6 +11,6 @@ class AllBindings extends Bindings {
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => LoginController(), fenix: true);
     Get.lazyPut(() => OnBoardingController(), fenix: true);
-    Get.lazyPut(() => RecordController(), fenix: true);
+    //Get.lazyPut(() => RecordController(), fenix: true);
   }
 }

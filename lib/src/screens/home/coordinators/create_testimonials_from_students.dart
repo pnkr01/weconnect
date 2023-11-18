@@ -86,6 +86,7 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
       try {
          List<String> imageUrls =
           await  _firebase.uploadTestimonialImageToFirebaseStorage(selectedImages);
+          
            CollectionReference companyTestimonials = FirebaseFirestore.instance.collection(selectedBatchValue!);
         final companyTestimonialData = {
           'stack': selectedValue,
@@ -94,7 +95,7 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
           'timestamp': FieldValue.serverTimestamp(), 
           'selectedImages': imageUrls,
           'batch':selectedBatchValue,
-          'registration no.':regd
+          'regdno':regd
 
       };
         //final companyRef = 
@@ -266,6 +267,10 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
                     }
+                    else if(value.length<10)
+                    {
+                      return "Registration Number must be of 10digits";
+                    }
                     return null;
                   },
                   controller: regdController,
@@ -287,7 +292,7 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                       ),
                     ),
                     onPressed: () {
-                      Get.to(() => RecordTestimonialClass());
+                      //Get.to(() => RecordTestimonialClass());
                     },
                     child: Text('Record Audio'),
                   ),
