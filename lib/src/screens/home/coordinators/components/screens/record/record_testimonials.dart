@@ -1,6 +1,10 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:record/record.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
-import 'package:weconnect/src/screens/home/coordinators/components/screens/record/controller/voice_recorder_api.dart';
+import 'package:weconnect/src/utils/gloabal_colors.dart';
+import 'package:weconnect/src/utils/global.dart';
 
 class RecordTestimonialClass extends StatefulWidget {
   const RecordTestimonialClass({super.key});
@@ -10,56 +14,90 @@ class RecordTestimonialClass extends StatefulWidget {
 }
 
 class _RecordTestimonialClassState extends State<RecordTestimonialClass> {
-  final SoundRecorder recorder = SoundRecorder();
-  @override
-  void initState() {
-    super.initState();
-    recorder.init();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    recorder.dispose();
-  }
+  SpeechToText speechToText = SpeechToText();
+  final record = AudioRecorder();
+  // final SoundRecorder recorder = SoundRecorder();
+  String text = "Hold the mic and start recording";
+  bool isListening = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        Center(
-          child: Text('Record Testimonial'),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: whiteColor, size: 25),
+        backgroundColor: color1,
+        title: Text(
+          "Record Testimonial",
+          style: TextStyle(
+            color: whiteColor,
+            fontSize: 18,
+          ),
         ),
-        buildStart(recorder),
-      ],
-    ));
-    // ignore: dead_code
-  }
-
-  Widget buildStart(SoundRecorder recorder) {
-    final isRecording = recorder.isRecording;
-    // ignore: dead_code
-    final icon = isRecording ? Icons.stop : Icons.mic;
-    // ignore: dead_code
-    final text = isRecording ? "Stop recording" : "Start recording";
-    // ignore: dead_code
-    final primary = isRecording ? Colors.red : color1;
-    // ignore: dead_code
-    final onprimary = isRecording ? Colors.red : color1;
-    return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size(175, 50),
-        foregroundColor: onprimary,
-        backgroundColor: primary,
       ),
-      icon: Icon(icon),
-      onPressed: () async {
-        // ignore: unused_local_variable
-        final isRecording = await recorder.toggleRecording();
-        setState(() {});
-      },
-      label: Text(text),
+      body: Center(
+          child: Text(
+        text,
+        style: TextStyle(color: whiteColor, fontSize: 18),
+      )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: AvatarGlow(
+        animate: isListening,
+        repeat: true,
+        duration: Duration(milliseconds: 2000),
+        showTwoGlows: true,
+        repeatPauseDuration: Duration(milliseconds: 100),
+        child: GestureDetector(
+          onTapDown: (TapDownDetails details) async {
+            try {
+              if (await record.hasPermission()) {
+                // Start recording to file
+                await record.start(const RecordConfig(),
+                    path: 'aFullPath/myFile.m4a');
+              }
+              // if (!isListening) {
+              //   var available = await speechToText.initialize();
+              //   if (available) {
+              //     setState(() {
+              //       isListening = true;
+              //       text = "Recording...";
+              //       speechToText.listen(
+              //         onResult: (result) {
+              //           setState(() {
+              //             text = result.recognizedWords;
+              //             connectdebugPrint(text);
+              //           });
+              //         },
+              //       );
+              //     });
+              //   } else {
+              //     showSnackBar("Speech Recoginition is not available", color1,
+              //         whiteColor);
+              //   }
+              // }
+            } catch (e) {
+              showSnackBar(
+                  "Speech Recoginition is not available", color1, whiteColor);
+            }
+          },
+          onTapUp: (details) {
+            setState(() {
+              isListening = false;
+              text = "Hold the mic and start recording";
+            });
+            // speechToText.stop();
+          },
+          child: CircleAvatar(
+            backgroundColor: color2,
+            radius: 35,
+            child: Icon(
+              isListening ? Icons.mic : Icons.mic_none,
+              color: whiteColor,
+            ),
+          ),
+        ),
+        endRadius: 75.0,
+      ),
+      backgroundColor: color1,
     );
   }
 }

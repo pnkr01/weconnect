@@ -1,5 +1,5 @@
 //###############-------Admin Start---------####################
-final List adminEmail1 = ["harshitaacharya03@gmail.com"];
+final List adminEmail1 = ["harshitaacharya03@gmail.com","infokumar66@gmail.com"];
 //###############-------Admin End---------####################
 
 //###############-------Coordinator---------####################
