@@ -62,20 +62,20 @@ class _CreateTestimonialFromStudentState
     '2030',
   ];
 
-  String? selectedValue;
-  String? selectedCourseValue;
-  String? selectedTopicValue;
-  String? selectedBatchValue;
+  List<String> selectedValue=[];
+ List<String>  selectedCourseValue=[];
+ List<String>  selectedTopicValue=[];
+ String?  selectedBatchValue;
 
-  void setSelectedValue(String? value) {
+  void setSelectedValue(List<String> value) {
     setState(() => selectedValue = value);
   }
 
-  void setSelectedCourseValue(String? value) {
+  void setSelectedCourseValue(List<String>  value) {
     setState(() => selectedCourseValue = value);
   }
 
-  void setSelectedTopicValue(String? value) {
+  void setSelectedTopicValue(List<String>  value) {
     setState(() => selectedTopicValue = value);
   }
   void setSelectedBatchValue(String? value) {
@@ -164,10 +164,10 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                   child: Text("Select Stack"),
                   alignment: Alignment.bottomLeft,
                 ),
-                Choice<String>.inline(
+                InlineChoice<String>.multiple(
                   clearable: true,
-                  value: ChoiceSingle.value(selectedValue),
-                  onChanged: ChoiceSingle.onChanged(setSelectedValue),
+                  value: selectedValue,
+                  onChanged: setSelectedValue,
                   itemCount: stackChoices.length,
                   itemBuilder: (state, i) {
                     return ChoiceChip(
@@ -188,10 +188,10 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                   child: Text("Select Branch"),
                   alignment: Alignment.bottomLeft,
                 ),
-                Choice<String>.inline(
+                InlineChoice<String>.multiple(
                   clearable: true,
-                  value: ChoiceSingle.value(selectedCourseValue),
-                  onChanged: ChoiceSingle.onChanged(setSelectedCourseValue),
+                  value: selectedCourseValue,
+                  onChanged: setSelectedCourseValue,
                   itemCount: courseChoices.length,
                   itemBuilder: (state, i) {
                     return ChoiceChip(
@@ -212,10 +212,10 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                   child: Text("Select Topic"),
                   alignment: Alignment.bottomLeft,
                 ),
-                Choice<String>.inline(
+                InlineChoice<String>.multiple(
                   clearable: true,
-                  value: ChoiceSingle.value(selectedTopicValue),
-                  onChanged: ChoiceSingle.onChanged(setSelectedTopicValue),
+                  value: selectedTopicValue,
+                  onChanged: setSelectedTopicValue,
                   itemCount: topicChoices.length,
                   itemBuilder: (state, i) {
                     return ChoiceChip(
