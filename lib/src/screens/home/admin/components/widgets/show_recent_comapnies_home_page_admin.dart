@@ -47,6 +47,7 @@ class RecentCompaniesWidgetAdmin extends StatelessWidget {
                         onTap: () => Get.toNamed(CompanyTestimonial.routeName,
                             arguments: {
                               'companyName': company['name'],
+                              'logo': company['logoImageUrl'],
                             }),
                         child: Container(
                           height: 100,
@@ -63,7 +64,7 @@ class RecentCompaniesWidgetAdmin extends StatelessWidget {
                                   child: ClipOval(
                                     child: Image.network(
                                       company['logoImageUrl'],
-                                      height: 50,
+                                      height: 90,
                                     ),
                                   ),
                                   radius: 70,

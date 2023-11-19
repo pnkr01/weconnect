@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
-import 'package:weconnect/src/screens/home/coordinators/create_testimonials_from_students.dart';
+import 'package:weconnect/src/screens/home/coordinators/screens/create_testimonial/create_testimonials_from_students.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class CoordinatorRecentCompanyWidget extends StatelessWidget {

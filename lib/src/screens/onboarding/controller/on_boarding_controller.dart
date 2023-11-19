@@ -7,7 +7,7 @@ import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/global/global.dart';
 import 'package:weconnect/src/screens/auth/auth_screen.dart';
 import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
-import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
+import 'package:weconnect/src/screens/home/coordinators/screens/home/coordinator_home.dart';
 
 class OnBoardingController extends GetxController {
   void startCaller() {

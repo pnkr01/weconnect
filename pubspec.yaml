@@ -49,8 +49,17 @@ dependencies:
   hidden_drawer_menu: ^3.0.1
   image_picker: ^1.0.4
   choice: ^2.3.0
-  flutter_voice_recorder: ^0.0.2
+  #flutter_voice_recorder: ^0.0.2
   path_provider: ^2.1.1
+  #flutter_sound_lite: ^8.5.0
+  permission_handler: ^11.0.1
+  avatar_glow: ^2.0.2
+  getwidget: ^2.0.4
+  dropdown_button2: ^1.1.1
+  speech_to_text: ^6.4.1
+  another_audio_recorder: ^1.0.1
+ # speech_to_text: ^6.4.1
+ # record: ^5.0.1
   # audioplayers: ^5.2.0
   # record: ^5.0.1
   # permission_handler: ^11.0.1
