@@ -1,103 +1,163 @@
-// import 'package:avatar_glow/avatar_glow.dart';
-// import 'package:flutter/material.dart';
-// import 'package:record/record.dart';
-// import 'package:speech_to_text/speech_to_text.dart';
-// import 'package:weconnect/src/constant/color_codes.dart';
-// import 'package:weconnect/src/utils/gloabal_colors.dart';
-// import 'package:weconnect/src/utils/global.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:get/get.dart';
+import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/utils/gloabal_colors.dart';
 
-// class RecordTestimonialClass extends StatefulWidget {
-//   const RecordTestimonialClass({super.key});
+class RecordScreen extends StatefulWidget {
+  @override
+  _RecordScreenState createState() => _RecordScreenState();
+}
 
-//   @override
-//   State<RecordTestimonialClass> createState() => _RecordTestimonialClassState();
-// }
+class _RecordScreenState extends State<RecordScreen> {
+  bool isRecording = false;
+  bool isPaused = false;
+  bool isStarted = false;
+  int seconds = 0;
+  late Duration timerDuration;
+  late Duration pauseDuration;
+  late Timer timer;
 
-// class _RecordTestimonialClassState extends State<RecordTestimonialClass> {
-//   SpeechToText speechToText = SpeechToText();
-//   final record = AudioRecorder();
-//   // final SoundRecorder recorder = SoundRecorder();
-//   String text = "Hold the mic and start recording";
-//   bool isListening = false;
+  @override
+  void initState() {
+    super.initState();
+    timerDuration = Duration(seconds: 1);
+    pauseDuration = Duration(seconds: 0);
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         iconTheme: IconThemeData(color: whiteColor, size: 25),
-//         backgroundColor: color1,
-//         title: Text(
-//           "Record Testimonial",
-//           style: TextStyle(
-//             color: whiteColor,
-//             fontSize: 18,
-//           ),
-//         ),
-//       ),
-//       body: Center(
-//           child: Text(
-//         text,
-//         style: TextStyle(color: whiteColor, fontSize: 18),
-//       )),
-//       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-//       floatingActionButton: AvatarGlow(
-//         animate: isListening,
-//         repeat: true,
-//         duration: Duration(milliseconds: 2000),
-//         showTwoGlows: true,
-//         repeatPauseDuration: Duration(milliseconds: 100),
-//         child: GestureDetector(
-//           onTapDown: (TapDownDetails details) async {
-//             try {
-//               if (await record.hasPermission()) {
-//                 // Start recording to file
-//                 await record.start(const RecordConfig(),
-//                     path: 'aFullPath/myFile.m4a');
-//               }
-//               // if (!isListening) {
-//               //   var available = await speechToText.initialize();
-//               //   if (available) {
-//               //     setState(() {
-//               //       isListening = true;
-//               //       text = "Recording...";
-//               //       speechToText.listen(
-//               //         onResult: (result) {
-//               //           setState(() {
-//               //             text = result.recognizedWords;
-//               //             connectdebugPrint(text);
-//               //           });
-//               //         },
-//               //       );
-//               //     });
-//               //   } else {
-//               //     showSnackBar("Speech Recoginition is not available", color1,
-//               //         whiteColor);
-//               //   }
-//               // }
-//             } catch (e) {
-//               showSnackBar(
-//                   "Speech Recoginition is not available", color1, whiteColor);
-//             }
-//           },
-//           onTapUp: (details) {
-//             setState(() {
-//               isListening = false;
-//               text = "Hold the mic and start recording";
-//             });
-//             // speechToText.stop();
-//           },
-//           child: CircleAvatar(
-//             backgroundColor: color2,
-//             radius: 35,
-//             child: Icon(
-//               isListening ? Icons.mic : Icons.mic_none,
-//               color: whiteColor,
-//             ),
-//           ),
-//         ),
-//         endRadius: 75.0,
-//       ),
-//       backgroundColor: color1,
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: color1,
+        leading: IconButton(
+            onPressed: () {
+              if (isStarted) _stopTimer();
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: whiteColor,
+            )),
+        title: Text(
+          'Record Voice',
+          style: TextStyle(color: whiteColor),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+            AvatarGlow(
+              endRadius: 100.0,
+              glowColor: isPaused ? whiteColor : color2,
+              animate: isStarted,
+              repeat: true,
+              showTwoGlows: true,
+              repeatPauseDuration: Duration(milliseconds: 100),
+              child: Material(
+                elevation: 8.0,
+                shape: CircleBorder(),
+                child: CircleAvatar(
+                  backgroundColor: Color(0xcfcfcf),
+                  child: Icon(
+                    Icons.mic,
+                    size: 50,
+                    color: isPaused ? redColor : color1,
+                  ),
+                  radius: 50.0,
+                ),
+              ),
+            ),
+            SizedBox(height: 14),
+            Text(
+              '${_formatDuration(Duration(seconds: seconds))}',
+              style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    !isStarted
+                        ? _startTimer()
+                        : isPaused
+                            ? _resumeTimer()
+                            : _pauseTimer();
+                  },
+                  child: !isStarted
+                      ? Text('Start')
+                      : isPaused
+                          ? Icon(Icons.play_arrow)
+                          : Icon(Icons.pause),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _stopTimer();
+                  },
+                  child: Text('Stop'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _startTimer() {
+    isStarted = true;
+    setState(() {
+      isRecording = true;
+      isPaused = false;
+    });
+
+    timer = Timer.periodic(timerDuration, (Timer t) {
+      if (!isPaused) {
+        setState(() {
+          seconds++;
+        });
+      }
+    });
+  }
+
+  void _pauseTimer() {
+    setState(() {
+      isPaused = true;
+    });
+  }
+
+  void _resumeTimer() {
+    setState(() {
+      isPaused = false;
+    });
+  }
+
+  void _stopTimer() {
+    isStarted = false;
+    setState(() {
+      isRecording = false;
+      isPaused = false;
+      seconds = 0;
+      timer.cancel();
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
+}

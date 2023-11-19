@@ -23,7 +23,7 @@ class CreateTestimonialFromStudent extends StatefulWidget {
 
 class _CreateTestimonialFromStudentState
     extends State<CreateTestimonialFromStudent> {
-      final batchController = TextEditingController();
+  final batchController = TextEditingController();
   final regdController = TextEditingController();
   List<String> stackChoices = [
     'SRE',
@@ -51,7 +51,7 @@ class _CreateTestimonialFromStudentState
     'SOFT',
     'TECH+APTI+SOFT',
   ];
-  List<String> batches=[
+  List<String> batches = [
     '2023',
     '2024',
     '2025',
@@ -62,57 +62,65 @@ class _CreateTestimonialFromStudentState
     '2030',
   ];
 
-  List<String> selectedValue=[];
- List<String>  selectedCourseValue=[];
- List<String>  selectedTopicValue=[];
- String?  selectedBatchValue;
+  List<String> selectedValue = [];
+  List<String> selectedCourseValue = [];
+  List<String> selectedTopicValue = [];
+  String? selectedBatchValue;
 
   void setSelectedValue(List<String> value) {
     setState(() => selectedValue = value);
   }
 
-  void setSelectedCourseValue(List<String>  value) {
+  void setSelectedCourseValue(List<String> value) {
     setState(() => selectedCourseValue = value);
   }
 
-  void setSelectedTopicValue(List<String>  value) {
+  void setSelectedTopicValue(List<String> value) {
     setState(() => selectedTopicValue = value);
   }
+
   void setSelectedBatchValue(String? value) {
     setState(() => selectedBatchValue = value);
   }
-Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) async {
-    if (selectedValue!.isNotEmpty &&selectedCourseValue!.isNotEmpty&&selectedTopicValue!.isNotEmpty&&selectedBatchValue!.isNotEmpty) {
+
+  Future<void> saveTestimonialsToFirebase(
+      String regd, List<File> selectedImages) async {
+    if (selectedValue.isNotEmpty &&
+        selectedCourseValue.isNotEmpty &&
+        selectedTopicValue.isNotEmpty &&
+        selectedBatchValue!.isNotEmpty) {
       try {
-         List<String> imageUrls =
-          await  _firebase.uploadTestimonialImageToFirebaseStorage(selectedImages);
-          
-           CollectionReference companyTestimonials = FirebaseFirestore.instance.collection(selectedBatchValue!);
+        List<String> imageUrls = await _firebase
+            .uploadTestimonialImageToFirebaseStorage(selectedImages);
+
+        CollectionReference companyTestimonials =
+            FirebaseFirestore.instance.collection(selectedBatchValue!);
         final companyTestimonialData = {
           'stack': selectedValue,
           'course': selectedCourseValue,
           'topic': selectedTopicValue,
-          'timestamp': FieldValue.serverTimestamp(), 
+          'timestamp': FieldValue.serverTimestamp(),
           'selectedImages': imageUrls,
-          'batch':selectedBatchValue,
-          'regdno':regd
+          'batch': selectedBatchValue,
+          'regdno': regd
+        };
+        //final companyRef =
+        companyTestimonials
+            .doc('Testimonials')
+            .collection(companyName)
+            .doc(regd)
+            .set(companyTestimonialData);
+        //     .collection(companyName)
+        //     .doc(selectedValue);
+        // await companyRef.set(companyTestimonialData);
 
-      };
-        //final companyRef = 
-        companyTestimonials.doc('Testimonials').collection(companyName).doc(regd).set(companyTestimonialData);
-      //     .collection(companyName)
-      //     .doc(selectedValue);
-      // await companyRef.set(companyTestimonialData);
-
-      // await companyRef.set(companyTestimonialData, SetOptions(merge: true));
-    } catch (e) {
-      print('Error saving company information: $e');
+        // await companyRef.set(companyTestimonialData, SetOptions(merge: true));
+      } catch (e) {
+        print('Error saving company information: $e');
+      }
     }
-
-
-    
   }
-}
+
   MyFirebase _firebase = MyFirebase();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final String companyName = Get.arguments["companyName"];
@@ -257,18 +265,19 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                     ),
                   ),
                 ),
-                
-                SizedBox(height: 12,),
-                 TextFormField(
+                SizedBox(
+                  height: 12,
+                ),
+                TextFormField(
                   maxLength: 10,
-                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                  ],
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
-                    }
-                    else if(value.length<10)
-                    {
+                    } else if (value.length < 10) {
                       return "Registration Number must be of 10digits";
                     }
                     return null;
@@ -280,7 +289,9 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                     hintText: 'Enter Registration No.',
                   ),
                 ),
-                 SizedBox(height: 12,),
+                SizedBox(
+                  height: 12,
+                ),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -292,7 +303,7 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                       ),
                     ),
                     onPressed: () {
-                      //Get.to(() => RecordTestimonialClass());
+                      Get.to(() => RecordScreen());
                     },
                     child: Text('Record Audio'),
                   ),
@@ -300,7 +311,6 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                 SizedBox(
                   height: 8,
                 ),
-
                 InkWell(
                   onTap: () {
                     _pickImages();
@@ -346,15 +356,18 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                 InkWell(
                   onTap: () async {
                     CustomCircleLoading.showDialog();
-                   
-                    if (_formKey.currentState!.validate()&& selectedImages != null && selectedValue!=null&&selectedCourseValue!=null &&selectedTopicValue!=null&&selectedBatchValue!=null) {
+
+                    if (_formKey.currentState!.validate() &&
+                        selectedImages != null &&
+                        selectedBatchValue != null) {
                       await _firebase.uploadTestimonialImageToFirebaseStorage(
                           selectedImages!);
-                      saveTestimonialsToFirebase(regdController.text,selectedImages!);
+                      saveTestimonialsToFirebase(
+                          regdController.text, selectedImages!);
                       CustomCircleLoading.cancelDialog();
-                       Get.back();
+                      Get.back();
                     }
-                    
+
                     // if (_formKey.currentState!.validate() &&
                     //     selectedImages != null) {
                     //   await _firebase.saveCompanyTestimonialsInfoToFirestore(
@@ -371,10 +384,10 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                     //   roleController.clear();
                     //   topicController.clear();
                     //   questionsController.clear();
-                      // CustomCircleLoading.cancelDialog();
-                    //  
-                    // } 
-                    
+                    // CustomCircleLoading.cancelDialog();
+                    //
+                    // }
+
                     else {
                       CustomCircleLoading.cancelDialog();
                       showSnackBar("fill all blanks", redColor, whiteColor);
