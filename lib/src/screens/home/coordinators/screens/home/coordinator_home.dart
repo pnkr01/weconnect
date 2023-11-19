@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/enums.dart';
 import 'package:weconnect/src/screens/home/admin/drawer/drawer.dart';
-import 'package:weconnect/src/screens/home/coordinators/recent_companies_coord.dart';
+import 'package:weconnect/src/screens/home/coordinators/screens/home/components/search/recent_companies_coordinators.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class CoordinatorHomePage extends StatelessWidget {

@@ -1,11 +1,19 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:another_audio_recorder/another_audio_recorder.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
+import 'package:weconnect/src/utils/global.dart';
 
 class RecordScreen extends StatefulWidget {
+  final String regdNo;
+
+  const RecordScreen({super.key, required this.regdNo});
   @override
   _RecordScreenState createState() => _RecordScreenState();
 }
@@ -16,14 +24,38 @@ class _RecordScreenState extends State<RecordScreen> {
   bool isStarted = false;
   int seconds = 0;
   late Duration timerDuration;
-  late Duration pauseDuration;
   late Timer timer;
+
+  stt.SpeechToText speech = stt.SpeechToText();
+  late AnotherAudioRecorder recorder;
 
   @override
   void initState() {
     super.initState();
     timerDuration = Duration(seconds: 1);
-    pauseDuration = Duration(seconds: 0);
+    checkPermission();
+  }
+
+  checkPermission() async {
+    bool hasPermission = await AnotherAudioRecorder.hasPermissions;
+    if (hasPermission) initRecord();
+  }
+
+  Future<String> getDirectory() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    print(appDocDir.path);
+    return appDocDir.path + "${widget.regdNo}}";
+  }
+
+  initRecord() async {
+    String path = await getDirectory();
+    recorder = AnotherAudioRecorder(path, audioFormat: AudioFormat.WAV);
+    await recorder.initialized;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -31,20 +63,7 @@ class _RecordScreenState extends State<RecordScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: color1,
-        leading: IconButton(
-            onPressed: () {
-              if (isStarted) _stopTimer();
-              Get.back();
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: whiteColor,
-            )),
-        title: Text(
-          'Record Voice',
-          style: TextStyle(color: whiteColor),
-        ),
+        title: Text('Record Voice'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -54,7 +73,7 @@ class _RecordScreenState extends State<RecordScreen> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.2),
             AvatarGlow(
               endRadius: 100.0,
-              glowColor: isPaused ? whiteColor : color2,
+              glowColor: isPaused ? Colors.white : Colors.blue,
               animate: isStarted,
               repeat: true,
               showTwoGlows: true,
@@ -67,7 +86,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   child: Icon(
                     Icons.mic,
                     size: 50,
-                    color: isPaused ? redColor : color1,
+                    color: isPaused ? Colors.red : Colors.blue,
                   ),
                   radius: 50.0,
                 ),
@@ -76,7 +95,11 @@ class _RecordScreenState extends State<RecordScreen> {
             SizedBox(height: 14),
             Text(
               '${_formatDuration(Duration(seconds: seconds))}',
-              style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
             SizedBox(height: 24),
             Row(
@@ -85,13 +108,16 @@ class _RecordScreenState extends State<RecordScreen> {
                 ElevatedButton(
                   onPressed: () {
                     !isStarted
-                        ? _startTimer()
+                        ? _startRecording()
                         : isPaused
-                            ? _resumeTimer()
-                            : _pauseTimer();
+                            ? _resumeRecording()
+                            : _pauseRecording();
                   },
                   child: !isStarted
-                      ? Text('Start')
+                      ? Text(
+                          'Start',
+                          style: TextStyle(fontSize: 18, color: Colors.blue),
+                        )
                       : isPaused
                           ? Icon(Icons.play_arrow)
                           : Icon(Icons.pause),
@@ -99,9 +125,12 @@ class _RecordScreenState extends State<RecordScreen> {
                 SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
-                    _stopTimer();
+                    _stopRecording();
                   },
-                  child: Text('Stop'),
+                  child: Text(
+                    'Stop',
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                  ),
                 ),
               ],
             ),
@@ -111,13 +140,13 @@ class _RecordScreenState extends State<RecordScreen> {
     );
   }
 
-  void _startTimer() {
+  Future<void> _startRecording() async {
     isStarted = true;
     setState(() {
       isRecording = true;
       isPaused = false;
     });
-
+    await recorder.start();
     timer = Timer.periodic(timerDuration, (Timer t) {
       if (!isPaused) {
         setState(() {
@@ -127,19 +156,21 @@ class _RecordScreenState extends State<RecordScreen> {
     });
   }
 
-  void _pauseTimer() {
+  void _pauseRecording() async {
+    await recorder.pause();
     setState(() {
       isPaused = true;
     });
   }
 
-  void _resumeTimer() {
+  void _resumeRecording() async {
+    await recorder.resume();
     setState(() {
       isPaused = false;
     });
   }
 
-  void _stopTimer() {
+  Future<void> _stopRecording() async {
     isStarted = false;
     setState(() {
       isRecording = false;
@@ -147,7 +178,27 @@ class _RecordScreenState extends State<RecordScreen> {
       seconds = 0;
       timer.cancel();
     });
+    Recording? result = await recorder.stop();
+    runThisAfterRecording(result);
   }
+
+  runThisAfterRecording(Recording? result) async {
+    showSnackBar("Recording Saved at ${result?.path}", color1, whiteColor);
+    connectdebugPrint(result.toString());
+    connectdebugPrint(result!.path);
+  }
+
+  // Future<void> _convertToText(String filePath) async {
+  //   if (await speech.initialize()) {
+  //     speech.listen(
+  //       onResult: (result) {
+  //         // Handle the speech-to-text result
+  //         print(result.recognizedWords);
+  //       },
+  //       listenFor: Duration(seconds: 15), // Adjust as needed
+  //     );
+  //   }
+  // }
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) {

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/constant/strings.dart';
 import 'package:weconnect/src/screens/home/admin/admin_home/admin_home.dart';
-import 'package:weconnect/src/screens/home/coordinators/coordinator_home.dart';
+import 'package:weconnect/src/screens/home/coordinators/screens/home/coordinator_home.dart';
 
 class AuthController extends GetxController {
   late GoogleSignIn googleSignIn;

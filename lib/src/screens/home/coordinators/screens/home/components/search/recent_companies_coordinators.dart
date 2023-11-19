@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weconnect/src/screens/home/admin/components/widgets/search_placeholder_admin.dart';
-import 'package:weconnect/src/screens/home/coordinators/components/coordinator_recent_company.dart';
+import 'package:weconnect/src/screens/home/coordinators/screens/home/components/recent_company/coordinator_recent_company.dart';
 
 class SearchCompaniesCoord extends StatefulWidget {
   const SearchCompaniesCoord({super.key});

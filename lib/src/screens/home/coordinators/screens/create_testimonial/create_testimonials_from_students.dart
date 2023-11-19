@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/db/firebase.dart';
-import 'package:weconnect/src/screens/home/coordinators/components/screens/record/record_testimonials.dart';
+import 'package:weconnect/src/screens/home/coordinators/screens/record/record_testimonials.dart';
 import 'package:weconnect/src/utils/circle_progress.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 import 'package:weconnect/src/utils/global.dart';
@@ -303,7 +303,9 @@ class _CreateTestimonialFromStudentState
                       ),
                     ),
                     onPressed: () {
-                      Get.to(() => RecordScreen());
+                      Get.to(() => RecordScreen(
+                            regdNo: regdController.text,
+                          ));
                     },
                     child: Text('Record Audio'),
                   ),
