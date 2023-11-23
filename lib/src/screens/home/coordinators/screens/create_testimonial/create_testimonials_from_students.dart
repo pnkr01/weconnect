@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/db/firebase.dart';
 import 'package:weconnect/src/screens/home/coordinators/screens/record/record_testimonials.dart';
@@ -134,6 +135,19 @@ class _CreateTestimonialFromStudentState
   final topicController = TextEditingController();
   final questionsController = TextEditingController();
   List<File>? selectedImages = [];
+  String? result = "";
+
+  Future<String> getDirectory() async {
+    Directory? appDocDir = await getDownloadsDirectory();
+    return "${appDocDir?.path}${regdController.text}}";
+  }
+
+  Future<bool> checkPathExistence() async {
+    String path = await getDirectory();
+    // For checking a file existence
+    File file = File(path);
+    return file.existsSync() ? true : false;
+  }
 
   // Function to pick an image from the gallery or camera
   Future<void> _pickImages() async {
@@ -302,12 +316,23 @@ class _CreateTestimonialFromStudentState
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    onPressed: () {
-                      Get.to(() => RecordScreen(
+                    onPressed: () async {
+                      result = await Get.to(() => RecordScreen(
                             regdNo: regdController.text,
                           ));
+                      setState(() {});
                     },
-                    child: Text('Record Audio'),
+                    // ignore: unnecessary_null_comparison
+                    child: result == "" || result == null
+                        ? Text('Record Audio')
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.file_copy),
+                              SizedBox(width: 8),
+                              Text("Recording Added"),
+                            ],
+                          ),
                   ),
                 ),
                 SizedBox(
@@ -397,7 +422,7 @@ class _CreateTestimonialFromStudentState
                   },
                   child: Container(
                     height: 40,
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                         color: color2,
                         boxShadow: [

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:another_audio_recorder/another_audio_recorder.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:weconnect/src/constant/color_codes.dart';
@@ -42,15 +43,20 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   Future<String> getDirectory() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    print(appDocDir.path);
-    return appDocDir.path + "${widget.regdNo}}";
+    Directory? appDocDir = await getDownloadsDirectory();
+    print("${appDocDir?.path}${widget.regdNo}}");
+    return "${appDocDir?.path}${widget.regdNo}}";
   }
 
   initRecord() async {
-    String path = await getDirectory();
-    recorder = AnotherAudioRecorder(path, audioFormat: AudioFormat.WAV);
-    await recorder.initialized;
+    try {
+      String path = await getDirectory();
+      recorder = AnotherAudioRecorder(path, audioFormat: AudioFormat.WAV);
+      await recorder.initialized;
+    } catch (e) {
+      return showSnackBar(
+          "Recording already exists please change regdNo", color1, whiteColor);
+    }
   }
 
   @override
@@ -125,7 +131,12 @@ class _RecordScreenState extends State<RecordScreen> {
                 SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
-                    _stopRecording();
+                    if (isStarted) {
+                      _stopRecording();
+                    } else {
+                      showSnackBar(
+                          "Recording isn't started", color1, whiteColor);
+                    }
                   },
                   child: Text(
                     'Stop',
@@ -178,14 +189,14 @@ class _RecordScreenState extends State<RecordScreen> {
       seconds = 0;
       timer.cancel();
     });
-    Recording? result = await recorder.stop();
-    runThisAfterRecording(result);
+    await recorder.stop().then((value) => runThisAfterRecording(value));
   }
 
   runThisAfterRecording(Recording? result) async {
-    showSnackBar("Recording Saved at ${result?.path}", color1, whiteColor);
-    connectdebugPrint(result.toString());
-    connectdebugPrint(result!.path);
+    print(result);
+    // connectdebugPrint(result.toString());
+    // connectdebugPrint(result!.path);
+    Get.back(result: result?.path != null ? result!.path : null);
   }
 
   // Future<void> _convertToText(String filePath) async {
