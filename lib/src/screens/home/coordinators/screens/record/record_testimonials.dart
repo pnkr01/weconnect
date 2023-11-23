@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:weconnect/src/constant/color_codes.dart';
-import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 import 'package:weconnect/src/utils/global.dart';
 
@@ -194,22 +193,8 @@ class _RecordScreenState extends State<RecordScreen> {
 
   runThisAfterRecording(Recording? result) async {
     print(result);
-    // connectdebugPrint(result.toString());
-    // connectdebugPrint(result!.path);
     Get.back(result: result?.path != null ? result!.path : null);
   }
-
-  // Future<void> _convertToText(String filePath) async {
-  //   if (await speech.initialize()) {
-  //     speech.listen(
-  //       onResult: (result) {
-  //         // Handle the speech-to-text result
-  //         print(result.recognizedWords);
-  //       },
-  //       listenFor: Duration(seconds: 15), // Adjust as needed
-  //     );
-  //   }
-  // }
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) {

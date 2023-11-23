@@ -1,12 +1,15 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/constant/strings.dart';
 import 'package:weconnect/src/db/local_db.dart';
 import 'package:weconnect/src/global/global.dart';
 import 'package:weconnect/src/utils/circle_progress.dart';
+import 'package:weconnect/src/utils/gloabal_colors.dart';
+
+import '../utils/global.dart';
 
 class MyFirebase {
   static FirebaseStorage storage = FirebaseStorage.instance;
@@ -106,10 +109,24 @@ class MyFirebase {
     }
   }
 
+  Future<String> uploadWavFile(File wavFile, String name) async {
+    try {
+      final Reference ref = storage.ref('recording/$name');
+      await ref.putFile(wavFile);
+
+      String downloadURL = await ref.getDownloadURL();
+      print('File uploaded. Download URL: $downloadURL');
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading file: $e');
+      showSnackBar("Error while uploading recordings", color1, whiteColor);
+      return "";
+    }
+  }
+
   Future<List<String>> uploadTestimonialImageToFirebaseStorage(
       List<File> selectedImages) async {
     // Initialize Firebase Storage
-    final FirebaseStorage storage = FirebaseStorage.instance;
 
     // Create a reference to the Firebase Storage bucket and folder where you want to store the images
     final Reference storageRef = storage.ref().child('testimonial-images');

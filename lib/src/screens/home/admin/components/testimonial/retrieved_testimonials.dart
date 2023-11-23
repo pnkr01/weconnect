@@ -1,7 +1,9 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class NextPage extends StatefulWidget {
@@ -14,6 +16,20 @@ class NextPage extends StatefulWidget {
 }
 
 class _NextPageState extends State<NextPage> {
+  AudioPlayer audioPlayer = AudioPlayer();
+  Future<void> playAudioFromFirebase(String audioUrl) async {
+    await audioPlayer.play(UrlSource(audioUrl), mode: PlayerMode.mediaPlayer);
+    // Set isLocal to false to indicate that the file is not local but a network file.
+  }
+
+  void pausePlayer() {
+    audioPlayer.pause();
+  }
+
+  void stopPlayer() {
+    audioPlayer.stop();
+  }
+
   TextStyle first = TextStyle(
       color: whiteColor,
       fontSize: 16.0,
@@ -42,14 +58,14 @@ class _NextPageState extends State<NextPage> {
         centerTitle: true,
       ),
 
-      body: FutureBuilder<QuerySnapshot>(
-        future: testimonialCollection
+      body: StreamBuilder<QuerySnapshot>(
+        stream: testimonialCollection
             .doc('Testimonials')
             .collection(widget.companyName)
-            .get(),
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -140,7 +156,10 @@ class _NextPageState extends State<NextPage> {
                               'Branches:',
                               style: first,
                             ),
-                            Text(' ${branches.join(', ')}',style: second,)
+                            Text(
+                              ' ${branches.join(', ')}',
+                              style: second,
+                            )
                           ],
                         ),
 
@@ -160,7 +179,14 @@ class _NextPageState extends State<NextPage> {
                             ),
                           ),
                         // Add other fields as needed
-                        //  SizedBox(height: 16),
+                        SizedBox(height: 16),
+
+                        IconButton(
+                            onPressed: () async {
+                              connectdebugPrint(doc['recording_url']);
+                              await playAudioFromFirebase(doc['recording_url']);
+                            },
+                            icon: Icon(Icons.stop))
                       ],
                     ),
                   ),

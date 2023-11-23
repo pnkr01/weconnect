@@ -85,11 +85,12 @@ class _CreateTestimonialFromStudentState
   }
 
   Future<void> saveTestimonialsToFirebase(
-      String regd, List<File> selectedImages) async {
+      String regd, List<File> selectedImages, String recording_url) async {
     if (selectedValue.isNotEmpty &&
         selectedCourseValue.isNotEmpty &&
         selectedTopicValue.isNotEmpty &&
-        selectedBatchValue!.isNotEmpty) {
+        selectedBatchValue!.isNotEmpty &&
+        recording_url.isNotEmpty) {
       try {
         List<String> imageUrls = await _firebase
             .uploadTestimonialImageToFirebaseStorage(selectedImages);
@@ -103,7 +104,8 @@ class _CreateTestimonialFromStudentState
           'timestamp': FieldValue.serverTimestamp(),
           'selectedImages': imageUrls,
           'batch': selectedBatchValue,
-          'regdno': regd
+          'regdno': regd,
+          'recording_url': recording_url
         };
         //final companyRef =
         companyTestimonials
@@ -386,38 +388,20 @@ class _CreateTestimonialFromStudentState
 
                     if (_formKey.currentState!.validate() &&
                         selectedImages != null &&
-                        selectedBatchValue != null) {
+                        selectedBatchValue != null &&
+                        result != null &&
+                        result!.contains('wav')) {
                       await _firebase.uploadTestimonialImageToFirebaseStorage(
                           selectedImages!);
-                      saveTestimonialsToFirebase(
-                          regdController.text, selectedImages!);
+                      String recording_url = await _firebase.uploadWavFile(
+                          File(result!), regdController.text);
+                      await saveTestimonialsToFirebase(
+                          regdController.text, selectedImages!, recording_url);
                       CustomCircleLoading.cancelDialog();
                       Get.back();
-                    }
-
-                    // if (_formKey.currentState!.validate() &&
-                    //     selectedImages != null) {
-                    //   await _firebase.saveCompanyTestimonialsInfoToFirestore(
-                    //     companyNameController.text,
-                    //     studentNameController.text,
-                    //     roleController.text,
-                    //     topicController.text,
-                    //     questionsController.text,
-                    //     selectedImages!,
-                    //   );
-
-                    //   companyNameController.clear();
-                    //   studentNameController.clear();
-                    //   roleController.clear();
-                    //   topicController.clear();
-                    //   questionsController.clear();
-                    // CustomCircleLoading.cancelDialog();
-                    //
-                    // }
-
-                    else {
+                    } else {
                       CustomCircleLoading.cancelDialog();
-                      showSnackBar("fill all blanks", redColor, whiteColor);
+                      showSnackBar("fill all blanks", color1, whiteColor);
                     }
                   },
                   child: Container(

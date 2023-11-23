@@ -94,7 +94,7 @@ class _CompanyTestimonialState extends State<CompanyTestimonial> {
                   },
                   child: Container(
                     height: 40,
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     decoration: BoxDecoration(
                         color: color2,
                         boxShadow: [
