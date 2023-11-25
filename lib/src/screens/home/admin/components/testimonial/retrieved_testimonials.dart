@@ -184,7 +184,8 @@ class _NextPageState extends State<NextPage> {
                         IconButton(
                             onPressed: () async {
                               connectdebugPrint(doc['recording_url']);
-                              await playAudioFromFirebase(doc['recording_url']);
+                              await 
+                              (doc['recording_url']);
                             },
                             icon: Icon(Icons.stop))
                       ],

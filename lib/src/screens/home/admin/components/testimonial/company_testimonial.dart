@@ -1,12 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:weconnect/src/constant/color_codes.dart';
+import 'package:weconnect/src/constant/print.dart';
 import 'package:weconnect/src/screens/home/admin/components/testimonial/retrieved_testimonials.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class CompanyTestimonial extends StatefulWidget {
-  const CompanyTestimonial({super.key});
+  final String companyName;
+  final String companyLogo;
+  const CompanyTestimonial({
+    Key? key,
+    required this.companyName,
+    required this.companyLogo,
+  }) : super(key: key);
   static const routeName = '/company-testimonial';
 
   @override
@@ -14,7 +22,7 @@ class CompanyTestimonial extends StatefulWidget {
 }
 
 class _CompanyTestimonialState extends State<CompanyTestimonial> {
-   String? selectedYear;
+  String selectedYear = "2022";
   @override
   Widget build(BuildContext context) {
     List<String> list = <String>[
@@ -27,16 +35,16 @@ class _CompanyTestimonialState extends State<CompanyTestimonial> {
       '2028',
       '2029',
     ];
-   
-    final arguments = Get.arguments as Map<String, dynamic>;
-    final String companyName = arguments['companyName'];
-    final String companyLogo = arguments['logo'];
+
+    // final arguments = Get.arguments as Map<String, dynamic>;
+    // final String companyName = arguments['companyName'];
+    // final String companyLogo = arguments['logo'];
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: color1,
         title: Text(
-          "${companyName.capitalizeFirst}",
+          "${widget.companyName.capitalizeFirst}",
           style: TextStyle(
               color: whiteColor,
               fontWeight: FontWeight.bold,
@@ -49,49 +57,53 @@ class _CompanyTestimonialState extends State<CompanyTestimonial> {
           padding: const EdgeInsets.only(
             top: 70.0,
           ),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(companyLogo),
-                  radius: 80,
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  "SELECT YEAR",
-                  style: TextStyle(
-                      color: color2,
-                      fontSize: 18.0,
-                      letterSpacing: 1.0,
-                      fontWeight: FontWeight.w600),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                DropdownMenu<String>(
-                  initialSelection: list.first,
-                  onSelected: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      selectedYear = value!;
-                    });
-                  },
-                  dropdownMenuEntries:
-                      list.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(
-                        style: ButtonStyle(), value: value, label: value);
-                  }).toList(),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                InkWell(
-                  onTap: () {
-                    Get.to(NextPage(selectedYear!,companyName));
-                  },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(widget.companyLogo),
+                radius: 80,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "SELECT YEAR",
+                style: TextStyle(
+                    color: color2,
+                    fontSize: 18.0,
+                    letterSpacing: 1.0,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              DropdownMenu<String>(
+                initialSelection: list.first,
+                onSelected: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    selectedYear = value!;
+                    connectdebugPrint(selectedYear);
+                  });
+                },
+                dropdownMenuEntries:
+                    list.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(
+                      style: ButtonStyle(), value: value, label: value);
+                }).toList(),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              InkWell(
+                onTap: () {
+                  //hide the keyboard
+                  FocusScope.of(context).unfocus();
+
+                  Get.to(NextPage(selectedYear, widget.companyName.toString()));
+                },
+                child: Center(
                   child: Container(
                     height: 40,
                     width: MediaQuery.of(context).size.width * 0.4,
@@ -113,8 +125,8 @@ class _CompanyTestimonialState extends State<CompanyTestimonial> {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

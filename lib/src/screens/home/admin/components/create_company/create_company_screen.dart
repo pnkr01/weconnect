@@ -100,8 +100,7 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.name,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -119,7 +118,9 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                  ],
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -138,8 +139,7 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))],
-                  keyboardType:TextInputType.text,
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -160,29 +160,30 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   onTap: () async {
                     CustomCircleLoading.showDialog();
                     if (_formKey.currentState!.validate()) {
-                      bool isNewCompany =
-                          await _firebase.saveCompanyInfoToFirestore(
-                              controller.getName,
-                              controller.getBatch,
-                              controller.getRole,
-                              controller.getCompensation,
-                              logoImage!);
+                      bool isNewCompany = await _firebase
+                          .checkIfCompanyExist(controller.getName);
 
                       connectdebugPrint(
                           "name is ${controller.getName} and batch is ${controller.getBatch} and role is ${controller.getRole} and compensation is ${controller.getCompensation} and logo is $logoImage");
 
                       connectdebugPrint("is new company $isNewCompany");
 
-                      if (logoImage != null && isNewCompany) {
+                      if (logoImage != null && isNewCompany == false) {
+                        await _firebase.saveCompanyInfoToFirestore(
+                            controller.getName,
+                            controller.getBatch,
+                            controller.getRole,
+                            controller.getCompensation,
+                            logoImage!);
                         await _firebase
                             .uploadImageToFirebaseStorage(logoImage!);
-                        controller.clearController();
                         CustomCircleLoading.cancelDialog();
+                        controller.clearController();
                         Get.back();
                       } else {
+                        CustomCircleLoading.cancelDialog();
                         showAlert(context, "Company Alert",
                             "This company already exist");
-                        controller.clearController();
                       }
                     } else {
                       CustomCircleLoading.cancelDialog();

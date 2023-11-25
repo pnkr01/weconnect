@@ -74,38 +74,45 @@ class MyFirebase {
     return imageUrl;
     // You can now save this URL to your database or use it in your app as needed.
   }
-  //////////UPLOADING COMPANY DATA TO FIRESTORE DB/////////////
 
-  Future<bool> saveCompanyInfoToFirestore(String name, String batch,
-      String role, String compensation, File logoImage) async {
+  //////////UPLOADING COMPANY DATA TO FIRESTORE DB/////////////
+  ///
+  ///
+  Future<bool> checkIfCompanyExist(String name) async {
     //check if company already exists
     final companyDoc = await companyCollection.doc(name).get();
 
-    if (!companyDoc.exists) {
-      CustomCircleLoading.cancelDialog();
-      return false;
-    } else {
-      try {
-        //final user = FirebaseAuth.instance.currentUser;
-        String imageUrl = await uploadImageToFirebaseStorage(logoImage);
-        final companyData = {
-          'name': name.toLowerCase(),
-          'batch': batch,
-          'role': role,
-          'compensation': compensation,
-          'logoImageUrl': imageUrl,
-          "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
-        };
-        final companyRef =
-            FirebaseFirestore.instance.collection('companies').doc(name);
-
-        await companyRef.set(companyData);
-
-        await companyRef.set(companyData, SetOptions(merge: true));
-      } catch (e) {
-        print('Error saving company information: $e');
-      }
+    if (companyDoc.exists) {
       return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> saveCompanyInfoToFirestore(String name, String batch,
+      String role, String compensation, File logoImage) async {
+    try {
+      //final user = FirebaseAuth.instance.currentUser;
+      String imageUrl = await uploadImageToFirebaseStorage(logoImage);
+      final companyData = {
+        'name': name.toLowerCase(),
+        'batch': batch,
+        'role': role,
+        'compensation': compensation,
+        'logoImageUrl': imageUrl,
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+      };
+      final companyRef =
+          FirebaseFirestore.instance.collection('companies').doc(name);
+
+      await companyRef.set(companyData);
+
+      await companyRef.set(companyData, SetOptions(merge: true));
+    } catch (e) {
+      CustomCircleLoading.cancelDialog();
+      print('Error saving company information: $e');
+      showSnackBar(
+          "Error while saving company information", color1, whiteColor);
     }
   }
 
