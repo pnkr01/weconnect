@@ -58,6 +58,7 @@ dependencies:
   dropdown_button2: ^1.1.1
   speech_to_text: ^6.4.1
   another_audio_recorder: ^1.0.1
+  audioplayers: ^5.2.1
  # speech_to_text: ^6.4.1
  # record: ^5.0.1
   # audioplayers: ^5.2.0

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 import 'package:weconnect/src/widget/alert_widget.dart';
 
-late SharedPreferences sharedPreferences;
+// late SharedPreferences sharedPreferences;
 
 String get appName => "Sangrah";
 String get logoPath => "assets/images/icon.png";

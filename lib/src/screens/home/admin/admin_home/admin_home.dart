@@ -57,13 +57,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
           ),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          searchBarPlaceHolderAdmin(),
-          RecentCompaniesWidgetAdmin(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            searchBarPlaceHolderAdmin(),
+            RecentCompaniesWidgetAdmin(),
+          ],
+        ),
       ),
     );
   }

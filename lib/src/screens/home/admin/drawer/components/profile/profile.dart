@@ -1,6 +1,5 @@
-import 'package:weconnect/src/utils/global.dart';
+import '../../../../../../global/global.dart';
 
-class UserProfile{
-  String get getUserName => sharedPreferences.getString("name")??"null";
-
+class UserProfile {
+  String get getUserName => sharedPreferences.getString("name") ?? "null";
 }

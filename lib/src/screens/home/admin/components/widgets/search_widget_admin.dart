@@ -1,14 +1,15 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:weconnect/src/screens/home/admin/components/testimonial/company_testimonial.dart';
 import 'package:weconnect/src/utils/global.dart';
 import 'package:weconnect/src/constant/color_codes.dart';
 import 'package:weconnect/src/utils/gloabal_colors.dart';
 
 class CompanySearchScreenAdmin extends StatefulWidget {
   @override
-  _CompanySearchScreenAdminState createState() => _CompanySearchScreenAdminState();
+  _CompanySearchScreenAdminState createState() =>
+      _CompanySearchScreenAdminState();
 }
 
 class _CompanySearchScreenAdminState extends State<CompanySearchScreenAdmin> {
@@ -88,41 +89,53 @@ class _CompanySearchScreenAdminState extends State<CompanySearchScreenAdmin> {
         itemBuilder: (context, index) {
           final companyData =
               _searchResults[index].data() as Map<String, dynamic>;
-          
-            return InkWell(
-              onTap: (){},
-              child: Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: Container(
-                    height: 60,
-                    width: MediaQuery.of(context).size.width*0.8,
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow(blurRadius: 5,color: Colors.black54)],
-                      borderRadius: BorderRadius.circular(16),
-                      color: greyCOlor
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0,top: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(capitalizeFirstLetter(companyData['name']).toUpperCase(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                          Text(companyData['role'])
-                        ],
-                      ),
-                    ),
-                    ),),
-            );
-            
-            //  ListTile(
 
-            //   onTap: () {
-                
-            //   },
-            //   title: Text(capitalizeFirstLetter(companyData['name'])),
-            //   subtitle: Text(companyData['role']),
-            //   // Add other fields you want to display
-            // );
+          return InkWell(
+            // onTap: () => Get.toNamed(CompanyTestimonial.routeName, arguments: {
+            //   'companyName': companyData['name'],
+            //   'logo': companyData['logoImageUrl'],
+            // }),
+            onTap: () {
+              Get.to(CompanyTestimonial(
+                  companyName: companyData['name'],
+                  companyLogo: companyData['logoImageUrl']));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Container(
+                height: 60,
+                width: MediaQuery.of(context).size.width * 0.8,
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(blurRadius: 5, color: Colors.black54)
+                ], borderRadius: BorderRadius.circular(16), color: greyCOlor),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, top: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        capitalizeFirstLetter(companyData['name'])
+                            .toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      Text(companyData['role'])
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          //  ListTile(
+
+          //   onTap: () {
+
+          //   },
+          //   title: Text(capitalizeFirstLetter(companyData['name'])),
+          //   subtitle: Text(companyData['role']),
+          //   // Add other fields you want to display
+          // );
           // } else {
 
           //   return InkWell(
@@ -155,20 +168,17 @@ class _CompanySearchScreenAdminState extends State<CompanySearchScreenAdmin> {
           //       ),
           //     ),
           //   );
-            
-            
-            // ListTile(
-            //   onTap: () {
-            //    Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //       return CompanyTestimonials();
-            //     }));
-            //   },
-            //   title: Text(capitalizeFirstLetter(companyData['name'])),
-            //   subtitle: Text(companyData['role']),
-            //   // Add other fields you want to display
-            // );
-          }
-  
-        );
+
+          // ListTile(
+          //   onTap: () {
+          //    Navigator.push(context, MaterialPageRoute(builder: (context) {
+          //       return CompanyTestimonials();
+          //     }));
+          //   },
+          //   title: Text(capitalizeFirstLetter(companyData['name'])),
+          //   subtitle: Text(companyData['role']),
+          //   // Add other fields you want to display
+          // );
+        });
   }
 }
