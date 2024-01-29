@@ -73,15 +73,15 @@ class MyFirebase {
   }
   //////////UPLOADING COMPANY DATA TO FIRESTORE DB/////////////
 
-  Future<bool> saveCompanyInfoToFirestore(String name, String batch,
+  Future<void> saveCompanyInfoToFirestore(String name, String batch,
       String role, String compensation, File logoImage) async {
     //check if company already exists
-    final companyDoc = await companyCollection.doc(name).get();
+    // final companyDoc = await companyCollection.doc(name).get();
 
-    if (!companyDoc.exists) {
-      CustomCircleLoading.cancelDialog();
-      return false;
-    } else {
+    // if (!companyDoc.exists) {
+    //   CustomCircleLoading.cancelDialog();
+    //   return false;
+    // } else {
       try {
         //final user = FirebaseAuth.instance.currentUser;
         String imageUrl = await uploadImageToFirebaseStorage(logoImage);
@@ -102,9 +102,9 @@ class MyFirebase {
       } catch (e) {
         print('Error saving company information: $e');
       }
-      return true;
+      //return true;
     }
-  }
+  
 
   Future<List<String>> uploadTestimonialImageToFirebaseStorage(
       List<File> selectedImages) async {

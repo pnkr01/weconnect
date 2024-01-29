@@ -17,8 +17,8 @@ class PendingCoordinators extends StatelessWidget {
         .update({'is_verified': isVerified});
     CustomCircleLoading.cancelDialog();
     showCustomAlertDialog(
-      "UnAuthorized Sucessfully",
-      "$name is now unauthorized",
+      "Authorized Sucessfully",
+      "$name is now Authorized",
     );
   }
 

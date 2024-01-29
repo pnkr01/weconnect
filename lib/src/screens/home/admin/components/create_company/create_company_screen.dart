@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,8 +101,8 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                  keyboardType: TextInputType.number,
+                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))],
+                 // keyboardType: TextInputType.text,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -119,7 +120,9 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                  ],
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -138,8 +141,8 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   height: 16,
                 ),
                 TextFormField(
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))],
-                  keyboardType:TextInputType.text,
+                  inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                  keyboardType:TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This Field is Mandatory.";
@@ -147,6 +150,7 @@ class _CompanyCreationState extends State<CompanyCreation> {
                     return null;
                   },
                   controller: controller.batchController,
+                  
                   decoration: new InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -160,7 +164,10 @@ class _CompanyCreationState extends State<CompanyCreation> {
                   onTap: () async {
                     CustomCircleLoading.showDialog();
                     if (_formKey.currentState!.validate()) {
-                      bool isNewCompany =
+                     
+                      await _firebase
+                            .uploadImageToFirebaseStorage(logoImage!);
+                         // bool isNewCompany = 
                           await _firebase.saveCompanyInfoToFirestore(
                               controller.getName,
                               controller.getBatch,
@@ -171,18 +178,17 @@ class _CompanyCreationState extends State<CompanyCreation> {
                       connectdebugPrint(
                           "name is ${controller.getName} and batch is ${controller.getBatch} and role is ${controller.getRole} and compensation is ${controller.getCompensation} and logo is $logoImage");
 
-                      connectdebugPrint("is new company $isNewCompany");
+                      //connectdebugPrint("is new company $isNewCompany");
 
-                      if (logoImage != null && isNewCompany) {
-                        await _firebase
-                            .uploadImageToFirebaseStorage(logoImage!);
-                        controller.clearController();
+                      if (logoImage != null) {
+                       
                         CustomCircleLoading.cancelDialog();
+                        controller.clearController();
                         Get.back();
                       } else {
+                        CustomCircleLoading.cancelDialog();
                         showAlert(context, "Company Alert",
                             "This company already exist");
-                        controller.clearController();
                       }
                     } else {
                       CustomCircleLoading.cancelDialog();

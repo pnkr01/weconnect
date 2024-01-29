@@ -18,10 +18,10 @@ class AcceptedCoordinators extends StatelessWidget {
         .update({'is_verified': isVerified});
     CustomCircleLoading.cancelDialog();
     showCustomAlertDialog(
-      "Authorized Sucessfully",
-      "$name is now Authorized",
+      "UnAuthorized Sucessfully",
+      "$name is now UnAuthorized",
     );
-    connectdebugPrint("Authorized Sucessfully");
+    connectdebugPrint("UnAuthorized Sucessfully");
   }
 
   // Function to delete a document
