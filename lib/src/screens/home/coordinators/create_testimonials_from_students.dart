@@ -281,25 +281,6 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                   ),
                 ),
                  SizedBox(height: 12,),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: whiteColor,
-                      backgroundColor: color2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    onPressed: () {
-                      //Get.to(() => RecordTestimonialClass());
-                    },
-                    child: Text('Record Audio'),
-                  ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
 
                 InkWell(
                   onTap: () {
@@ -355,25 +336,7 @@ Future<void> saveTestimonialsToFirebase(String regd,List<File> selectedImages) a
                        Get.back();
                     }
                     
-                    // if (_formKey.currentState!.validate() &&
-                    //     selectedImages != null) {
-                    //   await _firebase.saveCompanyTestimonialsInfoToFirestore(
-                    //     companyNameController.text,
-                    //     studentNameController.text,
-                    //     roleController.text,
-                    //     topicController.text,
-                    //     questionsController.text,
-                    //     selectedImages!,
-                    //   );
-
-                    //   companyNameController.clear();
-                    //   studentNameController.clear();
-                    //   roleController.clear();
-                    //   topicController.clear();
-                    //   questionsController.clear();
-                      // CustomCircleLoading.cancelDialog();
-                    //  
-                    // } 
+                 
                     
                     else {
                       CustomCircleLoading.cancelDialog();
